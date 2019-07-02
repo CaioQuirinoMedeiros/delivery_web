@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   * {
@@ -9,7 +9,7 @@ export default createGlobalStyle`
   }
 
   body {
-    background: #353940;
+    background: #fff;
     color: #fff;
     font-family: 'Helvetica', "Arial", sans-serif;
     text-rendering: optimizeLegibility !important;
