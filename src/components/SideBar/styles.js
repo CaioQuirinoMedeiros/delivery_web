@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default styled.li`
+export default styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;

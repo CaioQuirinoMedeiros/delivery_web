@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 import Container from "./styles";
 
@@ -26,5 +25,14 @@ const SideBar = ({ page, changePage }) => (
     </li>
   </Container>
 );
+
+SideBar.propTypes = {
+  page: PropTypes.string,
+  changePage: PropTypes.func.isRequired
+};
+
+SideBar.defaultProps = {
+  page: "Orders"
+};
 
 export default SideBar;

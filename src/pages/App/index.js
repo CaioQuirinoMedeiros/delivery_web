@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Route } from "react-router-dom";
 
 import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
@@ -9,7 +8,7 @@ import Orders from "./Orders";
 import Categories from "./Categories";
 import Products from "./Products";
 
-import { Container, Main, Page } from "./styles";
+import { Container, Main } from "./styles";
 
 class App extends PureComponent {
   static propTypes = {
