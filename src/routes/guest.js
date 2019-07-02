@@ -1,26 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { Route, Redirect } from "react-router-dom";
+
+import { isAuthenticated } from "../services/auth";
 
 const Guest = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props => (true ? (
-      <Component {...props} />
-    ) : (
-      <Redirect to={{ pathname: '/app', state: { from: props.location } }} />
-    ))
+    render={props =>
+      !isAuthenticated() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to={{ pathname: "/app", state: { from: props.location } }} />
+      )
     }
   />
 );
 
 Guest.propTypes = {
   component: PropTypes.func.isRequired,
-  location: PropTypes.shape(),
+  location: PropTypes.shape()
 };
 
 Guest.defaultProps = {
-  location: null,
+  location: null
 };
 
 export default Guest;
