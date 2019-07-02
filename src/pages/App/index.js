@@ -9,17 +9,23 @@ import Orders from './Orders';
 import Categories from './Categories';
 import Products from './Products';
 
+import { Container, Main, Page } from './styles';
+
 const App = (props) => {
   console.log(props);
   return (
-    <>
+    <Container>
       <Header history={props.history} />
-      <SideBar match={props.match} />
+      <Main>
+        <SideBar match={props.match} />
 
-      <Route path={`${props.match.path}/orders`} component={Orders} />
-      <Route path={`${props.match.path}/categories`} component={Categories} />
-      <Route path={`${props.match.path}/products`} component={Products} />
-    </>
+        <Page>
+          <Route path={`${props.match.path}/orders`} component={Orders} />
+          <Route path={`${props.match.path}/categories`} component={Categories} />
+          <Route path={`${props.match.path}/products`} component={Products} />
+        </Page>
+      </Main>
+    </Container>
   );
 };
 
