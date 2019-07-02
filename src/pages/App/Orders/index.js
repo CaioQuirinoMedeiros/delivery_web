@@ -73,6 +73,45 @@ class Orders extends Component {
     );
   };
 
+  renderOrder = order => {
+    const { filters } = this.state;
+
+    return filters[order.status] ? (
+      <OrderCard key={order.id} status={order.status}>
+        <div className="orderHeader">
+          <h2>
+            Pedido <strong>#{order.id}</strong> - {order.user.name}
+          </h2>
+          <select
+            name="status"
+            value={order.status}
+            onChange={e => this.updateOrderStatus(order.id, e.target.value)}
+          >
+            <option value="pendente">pendente</option>
+            <option value="cancelado">cancelado</option>
+            <option value="enviado">enviado</option>
+            <option value="pago">pago</option>
+            <option value="finalizado">finalizado</option>
+          </select>
+        </div>
+        <p>
+          {distanceInWordsToNow(order.created_at, {
+            locale: pt,
+            addSuffix: true
+          })}
+        </p>
+        <strong>{convertToBRL(Number(order.total))}</strong>
+        <ItemsContainer>
+          {order.items.map(item => this.renderItem(item))}
+        </ItemsContainer>
+        <span>
+          <strong>Observações: </strong>
+          {order.observations}
+        </span>
+      </OrderCard>
+    ) : null;
+  };
+
   renderItem = item => (
     <ItemCard key={item.id}>
       <img src={item.product_size.product.image.url} alt="product" />
@@ -85,48 +124,11 @@ class Orders extends Component {
   );
 
   render() {
-    const { orders, filters } = this.state;
+    const { orders } = this.state;
     return (
       <Container>
         {this.renderFilters()}
-        {orders.map(order =>
-          filters[order.status] ? (
-            <OrderCard key={order.id} status={order.status}>
-              <div className="orderHeader">
-                <h2>
-                  Pedido <strong>#{order.id}</strong> - {order.user.name}
-                </h2>
-                <select
-                  name="status"
-                  value={order.status}
-                  onChange={e =>
-                    this.updateOrderStatus(order.id, e.target.value)
-                  }
-                >
-                  <option value="pendente">pendente</option>
-                  <option value="cancelado">cancelado</option>
-                  <option value="enviado">enviado</option>
-                  <option value="pago">pago</option>
-                  <option value="finalizado">finalizado</option>
-                </select>
-              </div>
-              <p>
-                {distanceInWordsToNow(order.created_at, {
-                  locale: pt,
-                  addSuffix: true
-                })}
-              </p>
-              <strong>{convertToBRL(Number(order.total))}</strong>
-              <ItemsContainer>
-                {order.items.map(item => this.renderItem(item))}
-              </ItemsContainer>
-              <span>
-                <strong>Observações: </strong>
-                {order.observations}
-              </span>
-            </OrderCard>
-          ) : null
-        )}
+        {orders.map(order => this.renderOrder(order))}
       </Container>
     );
   }
