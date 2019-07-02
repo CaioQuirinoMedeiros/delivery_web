@@ -1,15 +1,16 @@
 import styled from "styled-components";
 
-export default styled.div`
+export default styled.li`
+  list-style: none;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #0b2031;
   background: #353940;
 
-  a {
+  li {
     width: 130px;
-    text-decoration: none;
     color: #fff;
+    cursor: pointer;
 
     padding: 20px 10px;
     border-bottom: 1px solid #0b2031;
@@ -21,7 +22,7 @@ export default styled.div`
     }
   }
 
-  a.active {
+  li.active {
     background: #f15454;
   }
 `;

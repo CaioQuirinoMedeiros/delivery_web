@@ -1,36 +1,52 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import { Route } from "react-router-dom";
 
-import SideBar from '../../components/SideBar';
-import Header from '../../components/Header';
+import SideBar from "../../components/SideBar";
+import Header from "../../components/Header";
 
-import Orders from './Orders';
-import Categories from './Categories';
-import Products from './Products';
+import Orders from "./Orders";
+import Categories from "./Categories";
+import Products from "./Products";
 
-import { Container, Main, Page } from './styles';
+import { Container, Main, Page } from "./styles";
 
-const App = (props) => {
-  console.log(props);
-  return (
-    <Container>
-      <Header history={props.history} />
-      <Main>
-        <SideBar match={props.match} />
+class App extends PureComponent {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func
+    }).isRequired
+  };
 
-        <Page>
-          <Route path={`${props.match.path}/orders`} component={Orders} />
-          <Route path={`${props.match.path}/categories`} component={Categories} />
-          <Route path={`${props.match.path}/products`} component={Products} />
-        </Page>
-      </Main>
-    </Container>
-  );
-};
+  state = {
+    activePage: "Orders"
+  };
 
-App.propTypes = {
-  match: PropTypes.shape().isRequired,
-};
+  changePage = page => {
+    this.setState({ activePage: page });
+  };
+
+  render() {
+    const { activePage } = this.state;
+    const { history } = this.props;
+
+    return (
+      <Container>
+        <Header history={history} />
+        <Main>
+          <SideBar page={activePage} changePage={this.changePage} />
+
+          {activePage === "Orders" ? (
+            <Orders />
+          ) : activePage === "Products" ? (
+            <Products />
+          ) : activePage === "Categories" ? (
+            <Categories />
+          ) : null}
+        </Main>
+      </Container>
+    );
+  }
+}
 
 export default App;

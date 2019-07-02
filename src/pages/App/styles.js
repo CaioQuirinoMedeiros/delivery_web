@@ -11,10 +11,6 @@ export const Main = styled.div`
   width: 100%;
   display: flex;
   flex: 1;
-  background: #fff;
-`;
-
-export const Page = styled.div`
   color: #0b2031;
-  flex: 1;
+  background: #fff;
 `;
