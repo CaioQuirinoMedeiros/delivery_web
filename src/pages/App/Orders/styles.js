@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  flex: 1;
+  width: 100%;
+  overflow-y: auto;
   flex-direction: column;
   align-items: center;
-  padding: 10px 20px;
+  padding: 25px 50px;
 `;
 
 export const OrderCard = styled.div`
@@ -88,6 +89,7 @@ export const ItemCard = styled.div`
   & > img {
     width: 60px;
     height: 60px;
+    border-radius: 10px;
   }
 
   & > div {
@@ -110,7 +112,7 @@ export const ItemCard = styled.div`
 export const Filters = styled.div`
   align-self: flex-start;
   display: flex;
-  margin: 15px 0;
+  flex-wrap: wrap;
 
   & > div {
     width: 90px;
@@ -118,7 +120,7 @@ export const Filters = styled.div`
     padding: 10px 5px;
     border-radius: 10px;
     border: 1px solid #ddd;
-    margin-right: 10px;
+    margin: 0 10px 15px 0;
     cursor: pointer;
     transition: all 0.3s;
 
