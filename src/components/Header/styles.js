@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
@@ -44,6 +44,11 @@ export const LogoutContainer = styled.div`
       opacity: 0.6;
       color: #fff;
       text-align: right;
+      transition: all 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
 `;

@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import logo from '../../assets/images/logo2x.png';
+import logo from "../../assets/images/logo2x.png";
 
-import { logout } from '../../services/auth';
+import { logout } from "../../services/auth";
 
-import { Container, LogoContainer, LogoutContainer } from './styles';
+import { Container, LogoContainer, LogoutContainer } from "./styles";
 
 class Header extends Component {
   static propTypes = {
     history: PropTypes.shape({
-      push: PropTypes.func,
-    }).isRequired,
+      push: PropTypes.func
+    }).isRequired
   };
 
   componentDidMount() {}
@@ -20,7 +20,7 @@ class Header extends Component {
     const { history } = this.props;
 
     logout();
-    history.push('/');
+    history.push("/");
   };
 
   render() {
@@ -37,8 +37,6 @@ class Header extends Component {
               Sair do app
             </button>
           </div>
-
-          <button>SAIR</button>
         </LogoutContainer>
       </Container>
     );
