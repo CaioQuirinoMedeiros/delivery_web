@@ -31,7 +31,7 @@ class ProductModal extends Component {
         base_price,
         image_id,
         category_id,
-        product_sizes: sizes.map(size => ({ size_id: size.id }))
+        product_sizes: sizes.map(product_size => product_size.size_id)
       });
 
       this.loadSizes(category_id);
@@ -189,6 +189,7 @@ class ProductModal extends Component {
       base_price,
       image_id,
       category_id,
+      product_sizes,
       isLoading,
       error,
       images,
@@ -263,7 +264,11 @@ class ProductModal extends Component {
             >
               {sizes.length &&
                 sizes.map(size => (
-                  <option key={size.id} value={size.id}>
+                  <option
+                    key={size.id}
+                    value={size.id}
+                    selected={product_sizes.includes(size.id)}
+                  >
                     {size.name}
                   </option>
                 ))}
