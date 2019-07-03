@@ -5,9 +5,9 @@ import { Container, SizeForm } from "./styles";
 
 class SizeModal extends Component {
   state = {
-    image_id: "",
     name: "",
     multiplier: "",
+    image_id: "",
     category_id: "",
     isLoading: false,
     error: "",
@@ -16,6 +16,16 @@ class SizeModal extends Component {
   };
 
   componentDidMount() {
+    const { size } = this.props;
+
+    console.log("size: ", size);
+
+    if (size) {
+      const { name, multiplier, image_id, category_id } = size;
+
+      this.setState({ name, multiplier, image_id, category_id });
+    }
+
     this.loadImages();
     this.loadCategories();
 
@@ -56,9 +66,30 @@ class SizeModal extends Component {
     this.setState({ [e.target.name]: e.target.value, error: "" });
   };
 
-  handleCreateSize = async e => {
-    e.preventDefault();
+  handleUpdateSize = async () => {
+    const { name, multiplier, image_id, category_id } = this.state;
+    const { closeModal, size } = this.props;
 
+    try {
+      this.setState({ isLoading: true });
+
+      await api.put(`admin/sizes/${size.id}`, {
+        name,
+        multiplier,
+        image_id,
+        category_id
+      });
+
+      closeModal();
+    } catch (err) {
+      console.log(err);
+      this.setState({ error: "Não foi possível editar o tamanho" });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  handleCreateSize = async e => {
     const { name, multiplier, image_id, category_id } = this.state;
     const { closeModal } = this.props;
 
@@ -81,23 +112,33 @@ class SizeModal extends Component {
     }
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { size } = this.props;
+
+    size ? this.handleUpdateSize() : this.handleCreateSize();
+  };
+
   render() {
     const {
       name,
       multiplier,
+      image_id,
+      category_id,
       isLoading,
       error,
       images,
       categories
     } = this.state;
-    const { closeModal } = this.props;
+    const { closeModal, size } = this.props;
 
     console.log(this.state);
 
     return (
       <Container id="outsideSizeModal">
-        <SizeForm onSubmit={this.handleCreateSize}>
-          <h2>Criar novo tamanho</h2>
+        <SizeForm onSubmit={this.handleSubmit}>
+          <h2>{size ? "Editar" : "Criar"} tamanho</h2>
           {!!error && <span>{error}</span>}
           <input
             name="name"
@@ -117,24 +158,34 @@ class SizeModal extends Component {
           />
           <div>
             <label>Imagem</label>
-            <select name="image_id" onChange={this.handleInputChange}>
+            <select
+              value={image_id}
+              name="image_id"
+              onChange={this.handleInputChange}
+            >
               {images.length &&
                 images.map(image => (
                   <option key={image.id} value={image.id}>
                     {image.original_name}
                   </option>
                 ))}
+              <option selected value="" />
             </select>
           </div>
           <div>
             <label>Categoria</label>
-            <select name="category_id" onChange={this.handleInputChange}>
+            <select
+              value={category_id}
+              name="category_id"
+              onChange={this.handleInputChange}
+            >
               {categories.length &&
                 categories.map(category => (
                   <option key={category.id} value={category.id}>
                     {category.name}
                   </option>
                 ))}
+              <option selected value="" />
             </select>
           </div>
           <button type="submit">
