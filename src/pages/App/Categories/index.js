@@ -89,7 +89,7 @@ class Categories extends Component {
   );
 
   render() {
-    const { categories, isModalOpen, modal } = this.state;
+    const { categories, modal } = this.state;
 
     return (
       <Container>
