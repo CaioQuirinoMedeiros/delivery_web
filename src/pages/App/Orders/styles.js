@@ -129,13 +129,17 @@ export const Filters = styled.div`
     transition: all 0.3s;
 
     &:hover {
-      background: #f15454;
+      background: #e62638;
       color: #fff;
     }
 
     &.active {
-      background: #e62638;
+      background: #f15454;
       color: #fff;
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 `;
