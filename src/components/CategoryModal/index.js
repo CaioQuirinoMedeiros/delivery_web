@@ -17,8 +17,6 @@ class CategoryModal extends Component {
   componentDidMount() {
     const { category } = this.props;
 
-    console.log(this.props);
-
     if (category) {
       const { name, description, cook_time, image_id } = category;
       this.setState({ name, description, cook_time, image_id });
