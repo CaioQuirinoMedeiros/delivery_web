@@ -23,6 +23,6 @@ export default styled.ul`
   }
 
   li.active {
-    background: #f15454;
+    background: #e62638;
   }
 `;

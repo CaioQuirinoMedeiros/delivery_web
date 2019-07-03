@@ -9,7 +9,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 99;
 `;
 
@@ -62,6 +62,8 @@ export const CategoryForm = styled.form`
   }
 
   button {
+    font-size: 16px;
+    letter-spacing: 1.05px;
     width: 100%;
     margin-top: 10px;
     text-align: center;
@@ -73,7 +75,7 @@ export const CategoryForm = styled.form`
     transition: all 0.2s;
 
     &:hover {
-      opacity: 0.9;
+      background: #e62638;
     }
   }
 
@@ -81,5 +83,10 @@ export const CategoryForm = styled.form`
     background: #fff;
     color: inherit;
     padding: 5px;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 `;
