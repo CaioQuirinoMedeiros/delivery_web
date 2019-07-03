@@ -11,6 +11,8 @@ import {
   CategoryInfo,
   CategoryImage,
   CategoryDetails,
+  CategoryOptions,
+  EditCategoryButton,
   DeleteCategoryButton,
   AddCategoryButton
 } from "./styles";
@@ -18,7 +20,11 @@ import {
 class Categories extends Component {
   state = {
     categories: [],
-    isModalOpen: false
+    isModalOpen: false,
+    modal: {
+      open: false,
+      category: {}
+    }
   };
 
   componentDidMount() {
@@ -45,13 +51,13 @@ class Categories extends Component {
     }
   };
 
-  openModal = () => {
-    this.setState({ isModalOpen: true });
+  closeModal = () => {
+    this.setState({ modal: { open: false, category: null } });
+    this.loadCategories();
   };
 
-  closeModal = () => {
-    this.setState({ isModalOpen: false });
-    this.loadCategories();
+  openModal = (category = null) => {
+    this.setState({ modal: { open: true, category } });
   };
 
   renderCategory = category => (
@@ -72,17 +78,27 @@ class Categories extends Component {
           </p>
         </CategoryDetails>
       </CategoryInfo>
-      <DeleteCategoryButton onClick={() => this.deleteCategory(category.id)} />
+      <CategoryOptions>
+        <EditCategoryButton onClick={() => this.openModal(category)} />
+        <DeleteCategoryButton
+          onClick={() => this.deleteCategory(category.id)}
+        />
+      </CategoryOptions>
     </CategoryCard>
   );
 
   render() {
-    const { categories, isModalOpen } = this.state;
+    const { categories, isModalOpen, modal } = this.state;
 
     return (
       <Container>
-        {isModalOpen && <CategoryModal closeModal={this.closeModal} />}
-        <AddCategoryButton onClick={this.openModal} />
+        {modal.open && (
+          <CategoryModal
+            closeModal={this.closeModal}
+            category={modal.category}
+          />
+        )}
+        <AddCategoryButton onClick={() => this.openModal()} />
         {categories.map(category => this.renderCategory(category))}
       </Container>
     );

@@ -15,6 +15,15 @@ class CategoryModal extends Component {
   };
 
   componentDidMount() {
+    const { category } = this.props;
+
+    console.log(this.props);
+
+    if (category) {
+      const { name, description, cook_time, image_id } = category;
+      this.setState({ name, description, cook_time, image_id });
+    }
+
     this.loadImages();
 
     document.addEventListener("click", this.clickOutsideEventListener);
@@ -44,9 +53,30 @@ class CategoryModal extends Component {
     this.setState({ [e.target.name]: e.target.value, error: "" });
   };
 
-  handleCreateCategory = async e => {
-    e.preventDefault();
+  handleUpdateCategory = async e => {
+    const { category, closeModal } = this.props;
+    const { name, description, cook_time, image_id } = this.state;
 
+    try {
+      this.setState({ isLoading: true });
+
+      await api.put(`admin/categories/${category.id}`, {
+        name,
+        description,
+        cook_time,
+        image_id
+      });
+
+      closeModal();
+    } catch (err) {
+      console.log(err);
+      this.setState({ error: "Não foi possível editar a categoria" });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  handleCreateCategory = async e => {
     const { name, description, cook_time, image_id } = this.state;
     const { closeModal } = this.props;
 
@@ -69,21 +99,30 @@ class CategoryModal extends Component {
     }
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { category } = this.props;
+
+    category ? this.handleUpdateCategory() : this.handleCreateCategory();
+  };
+
   render() {
     const {
       name,
       description,
       cook_time,
+      image_id,
       isLoading,
       error,
       images
     } = this.state;
-    const { closeModal } = this.props;
+    const { closeModal, category } = this.props;
 
     return (
       <Container id="outsideCategoryModal">
-        <CategoryForm onSubmit={this.handleCreateCategory}>
-          <h2>Criar nova categoria</h2>
+        <CategoryForm onSubmit={this.handleSubmit}>
+          <h2>{category ? "Editar" : "Criar"} categoria</h2>
           {!!error && <span>{error}</span>}
           <input
             name="name"
@@ -109,7 +148,11 @@ class CategoryModal extends Component {
           />
           <div>
             <label>Imagem</label>
-            <select name="image_id" onChange={this.handleInputChange}>
+            <select
+              name="image_id"
+              value={image_id}
+              onChange={this.handleInputChange}
+            >
               {images.length &&
                 images.map(image => (
                   <option key={image.id} value={image.id}>
