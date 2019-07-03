@@ -62,8 +62,9 @@ export const ProductForm = styled.form`
   }
 
   button {
+    font-size: 16px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
     padding: 15px;
     border-radius: 10px;
@@ -73,14 +74,22 @@ export const ProductForm = styled.form`
     transition: all 0.2s;
 
     &:hover {
-      opacity: 0.9;
+      background: #e62638;
+    }
+
+    &:first-of-type {
+      margin-top: 20px;
     }
   }
 
   button.close {
-    margin-top: 10px;
     background: #fff;
     color: inherit;
     padding: 5px;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 `;

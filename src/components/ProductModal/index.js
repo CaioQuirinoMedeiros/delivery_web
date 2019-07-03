@@ -5,11 +5,11 @@ import { Container, ProductForm } from "./styles";
 
 class ProductModal extends Component {
   state = {
+    name: "",
+    base_price: "",
     image_id: "",
     category_id: "",
     product_sizes: [],
-    name: "",
-    base_price: "",
     isLoading: false,
     error: "",
     images: [],
@@ -20,6 +20,22 @@ class ProductModal extends Component {
   componentDidMount() {
     this.loadImages();
     this.loadCategories();
+
+    const { product } = this.props;
+    console.log(product);
+    if (product) {
+      const { name, base_price, image_id, category_id, sizes } = product;
+
+      this.setState({
+        name,
+        base_price,
+        image_id,
+        category_id,
+        product_sizes: sizes.map(size => ({ size_id: size.id }))
+      });
+
+      this.loadSizes(category_id);
+    }
 
     document.addEventListener("click", this.clickOutsideEventListener);
   }
@@ -94,9 +110,40 @@ class ProductModal extends Component {
     this.setState({ product_sizes });
   };
 
-  handleCreateProduct = async e => {
-    e.preventDefault();
+  handleUpdateProduct = async () => {
+    const {
+      name,
+      base_price,
+      image_id,
+      category_id,
+      product_sizes
+    } = this.state;
 
+    const { closeModal, product } = this.props;
+
+    try {
+      this.setState({ isLoading: true });
+
+      await api.put(`admin/products/${product.id}`, {
+        name,
+        base_price,
+        image_id,
+        category_id,
+        sizes: product_sizes.map(size => ({
+          size_id: size
+        }))
+      });
+
+      closeModal();
+    } catch (err) {
+      console.log(err);
+      this.setState({ error: "Não foi possível editar o produto" });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  handleCreateProduct = async () => {
     const {
       name,
       base_price,
@@ -128,24 +175,34 @@ class ProductModal extends Component {
     }
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { product } = this.props;
+
+    product ? this.handleUpdateProduct() : this.handleCreateProduct();
+  };
+
   render() {
     const {
       name,
       base_price,
+      image_id,
+      category_id,
       isLoading,
       error,
       images,
       categories,
       sizes
     } = this.state;
-    const { closeModal } = this.props;
+    const { closeModal, product } = this.props;
 
     console.log(this.state.product_sizes);
 
     return (
       <Container id="outsideProductModal">
-        <ProductForm onSubmit={this.handleCreateProduct}>
-          <h2>Criar novo produto</h2>
+        <ProductForm onSubmit={this.handleSubmit}>
+          <h2>{product ? "Editar" : "Criar"} produto</h2>
           {!!error && <span>{error}</span>}
           <input
             name="name"
@@ -165,7 +222,11 @@ class ProductModal extends Component {
           />
           <div>
             <label>Imagem</label>
-            <select name="image_id" onChange={this.handleInputChange}>
+            <select
+              value={image_id}
+              name="image_id"
+              onChange={this.handleInputChange}
+            >
               {images.length &&
                 images.map(image => (
                   <option key={image.id} value={image.id}>
@@ -177,7 +238,11 @@ class ProductModal extends Component {
           </div>
           <div>
             <label>Categoria</label>
-            <select name="category_id" onChange={this.handleCategoryChange}>
+            <select
+              value={category_id}
+              name="category_id"
+              onChange={this.handleCategoryChange}
+            >
               {categories.length &&
                 categories.map(category => (
                   <option key={category.id} value={category.id}>
@@ -205,7 +270,7 @@ class ProductModal extends Component {
             </select>
           </div>
           <button type="submit">
-            {isLoading ? "Carregando..." : "Enviar"}
+            {isLoading ? "Carregando..." : "Salvar"}
           </button>
           <button type="button" className="close" onClick={() => closeModal()}>
             Fechar
