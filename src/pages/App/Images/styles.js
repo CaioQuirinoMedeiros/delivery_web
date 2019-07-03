@@ -13,7 +13,8 @@ export const NewImageContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-bottom: 20px;
-  border-bottom: 1px solid #706e7b;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
 
   div {
     display: flex;
@@ -27,11 +28,18 @@ export const NewImageContainer = styled.div`
   }
 
   button {
+    font-size: 16px;
     border: none;
     background: #f15454;
+    font-weight: bold;
     color: #fff;
     padding: 10px;
     border-radius: 10px;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #e62638;
+    }
   }
 `;
 
