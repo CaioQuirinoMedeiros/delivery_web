@@ -9,7 +9,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 99;
 `;
 
@@ -23,6 +23,7 @@ export const CategoryForm = styled.form`
 
   h2 {
     text-align: center;
+    margin-bottom: 10px;
   }
 
   span {
