@@ -189,7 +189,7 @@ class SizeModal extends Component {
             </select>
           </div>
           <button type="submit">
-            {isLoading ? "Carregando..." : "Enviar"}
+            {isLoading ? "Carregando..." : "Salvar"}
           </button>
           <button type="button" className="close" onClick={() => closeModal()}>
             Fechar

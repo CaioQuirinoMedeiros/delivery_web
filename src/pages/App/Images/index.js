@@ -67,7 +67,7 @@ class Images extends Component {
             {newImage && <img src={newImage.url} alt="nova imagem" />}
           </div>
           <button type="button" onClick={this.handleImageSubmit}>
-            ENVIAR
+            Salvar
           </button>
         </NewImageContainer>
         <ImagesContainer>
