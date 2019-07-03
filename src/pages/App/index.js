@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import Orders from "./Orders";
 import Categories from "./Categories";
 import Products from "./Products";
+import Images from "./Images";
 
 import { Container, Main } from "./styles";
 
@@ -41,6 +42,8 @@ class App extends PureComponent {
             <Products />
           ) : activePage === "Categories" ? (
             <Categories />
+          ) : activePage === "Images" ? (
+            <Images />
           ) : null}
         </Main>
       </Container>
