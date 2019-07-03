@@ -105,10 +105,7 @@ class SizeModal extends Component {
           />
           <div>
             <label>Imagem</label>
-            <select
-              name="image_id"
-              onChange={e => this.setState({ image_id: e.target.value })}
-            >
+            <select name="image_id" onChange={this.handleInputChange}>
               {images.length &&
                 images.map(image => (
                   <option key={image.id} value={image.id}>
