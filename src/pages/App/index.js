@@ -39,12 +39,12 @@ class App extends PureComponent {
 
           {activePage === "Orders" ? (
             <Orders />
-          ) : activePage === "Products" ? (
-            <Products />
           ) : activePage === "Categories" ? (
             <Categories />
           ) : activePage === "Sizes" ? (
             <Sizes />
+          ) : activePage === "Products" ? (
+            <Products />
           ) : activePage === "Images" ? (
             <Images />
           ) : null}
