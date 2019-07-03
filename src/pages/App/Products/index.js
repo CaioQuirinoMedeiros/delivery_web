@@ -3,14 +3,33 @@ import React, { Component } from "react";
 import api from "../../../services/api";
 import { convertToBRL } from "../../../services/currency";
 
+import NoImage from "../../../assets/images/no-image.jpg";
 import ProductModal from "../../../components/ProductModal";
 
-import { Container, ProductCard } from "./styles";
+import {
+  Container,
+  ProductCard,
+  ProductTop,
+  ProductImage,
+  ProductInfo,
+  ProductDetails,
+  ProductBottom
+} from "./styles";
+
+import {
+  EditDeleteOptions,
+  EditButton,
+  DeleteButton,
+  AddButton
+} from "../../../styles/buttons";
 
 class Products extends Component {
   state = {
     products: [],
-    isModalOpen: false
+    modal: {
+      open: false,
+      product: null
+    }
   };
 
   componentDidMount() {
@@ -24,7 +43,7 @@ class Products extends Component {
       this.setState({
         products: data.map(product => ({
           ...product,
-          base_price: convertToBRL(Number(product.base_price))
+          base_price_formatted: convertToBRL(Number(product.base_price))
         }))
       });
     } catch (err) {
@@ -43,46 +62,60 @@ class Products extends Component {
   };
 
   closeModal = () => {
-    this.setState({ isModalOpen: false });
+    this.setState({ modal: { open: false, product: null } });
     this.loadProducts();
+  };
+
+  openModal = (product = null) => {
+    this.setState({ modal: { open: true, product } });
   };
 
   renderProduct = product => (
     <ProductCard key={product.id}>
-      <button type="button" onClick={() => this.deleteProduct(product.id)}>
-        X
-      </button>
-      <img src={product.image.url} alt={product.name} />
-      <div className="productInfo">
-        <strong>{product.name}</strong>
-        <p>Categoria: {product.category.name}</p>
-        <p>Preço base: {product.base_price}</p>
-        <ul>
-          {product.sizes.map(product_size => (
-            <li key={product_size.id}>
-              <span>{product_size.size.name}:</span>
-              <span>{convertToBRL(Number(product_size.price))}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ProductTop>
+        <ProductInfo>
+          <ProductImage
+            imageUrl={product.image ? product.image.url : NoImage}
+          />
+          <ProductDetails>
+            <strong>{product.name}</strong>
+            <p>
+              <span>Categoria: </span>
+              {product.category.name}
+            </p>
+            <p>
+              <span>Preço base: </span>
+              {product.base_price_formatted}
+            </p>
+          </ProductDetails>
+        </ProductInfo>
+        <EditDeleteOptions>
+          <EditButton onClick={() => this.openModal(product)} />
+          <DeleteButton onClick={() => this.deleteProduct(product.id)} />
+        </EditDeleteOptions>
+      </ProductTop>
+      <ProductBottom>
+        {product.sizes.map(product_size => (
+          <p key={product_size.id}>
+            <span>{product_size.size.name}: </span>
+            {convertToBRL(Number(product_size.price))}
+          </p>
+        ))}
+      </ProductBottom>
     </ProductCard>
   );
 
   render() {
-    const { products, isModalOpen } = this.state;
+    const { products, modal } = this.state;
     console.log(products);
 
     return (
       <Container>
-        {isModalOpen && <ProductModal closeModal={this.closeModal} />}
+        <AddButton onClick={() => this.openModal()} />
+        {modal.open && (
+          <ProductModal closeModal={this.closeModal} product={modal.product} />
+        )}
         {products.map(product => this.renderProduct(product))}
-        <button
-          type="button"
-          onClick={() => this.setState({ isModalOpen: true })}
-        >
-          Novo
-        </button>
       </Container>
     );
   }
