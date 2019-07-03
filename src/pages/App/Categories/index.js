@@ -2,9 +2,16 @@ import React, { Component } from "react";
 
 import api from "../../../services/api";
 
+import NoImage from "../../../assets/images/no-image.jpg";
 import CategoryModal from "../../../components/CategoryModal";
 
-import { Container, CategoryCard } from "./styles";
+import {
+  Container,
+  CategoryCard,
+  CategoryInfo,
+  DeleteCategoryButton,
+  AddCategoryButton
+} from "./styles";
 
 class Categories extends Component {
   state = {
@@ -43,17 +50,24 @@ class Categories extends Component {
 
   renderCategory = category => (
     <CategoryCard key={category.id}>
-      <button type="button" onClick={() => this.deleteCategory(category.id)}>
-        X
-      </button>
-      <img src={category.image.url} alt={category.name} />
-      <div className="categoryInfo">
+      <CategoryInfo>
+        <img
+          src={category.image ? category.image.url : NoImage}
+          alt={category.name}
+        />
         <div>
           <strong>{category.name}</strong>
-          <p>{category.description}</p>
+          <p>
+            <span>Descrição: </span>
+            {category.description}
+          </p>
+          <p>
+            <span>Tempo de cozimento: </span>
+            {category.cook_time} mins
+          </p>
         </div>
-        <p>{category.cook_time} mins</p>
-      </div>
+      </CategoryInfo>
+      <DeleteCategoryButton onClick={() => this.deleteCategory(category.id)} />
     </CategoryCard>
   );
 
@@ -64,12 +78,15 @@ class Categories extends Component {
       <Container>
         {isModalOpen && <CategoryModal closeModal={this.closeModal} />}
         {categories.map(category => this.renderCategory(category))}
-        <button
+        {/* <button
           type="button"
           onClick={() => this.setState({ isModalOpen: true })}
         >
           Novo
-        </button>
+        </button> */}
+        <AddCategoryButton
+          onClick={() => this.setState({ isModalOpen: true })}
+        />
       </Container>
     );
   }
