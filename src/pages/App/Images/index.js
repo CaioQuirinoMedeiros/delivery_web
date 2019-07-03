@@ -1,12 +1,17 @@
 import React, { Component } from "react";
 
 import api from "../../../services/api";
+
 import {
   Container,
   NewImageContainer,
   ImagesContainer,
-  ImageCard
+  ImageCard,
+  ImageContainer,
+  ImageNameAndDelete
 } from "./styles";
+
+import { DeleteButton } from "../../../styles/buttons";
 
 class Images extends Component {
   state = {
@@ -30,8 +35,13 @@ class Images extends Component {
 
   handleImageChange = e => {
     const newImage = e.target.files[0];
-    newImage.url = URL.createObjectURL(newImage);
-    this.setState({ newImage });
+
+    if (newImage) {
+      newImage.url = URL.createObjectURL(newImage);
+      this.setState({ newImage });
+    } else {
+      this.setState({ newImage: null });
+    }
   };
 
   handleImageSubmit = async () => {
@@ -49,10 +59,39 @@ class Images extends Component {
     }
   };
 
+  handleImageUpdate = async (id, original_name) => {
+    try {
+      await api.put(`admin/images/${id}`, { original_name });
+
+      this.loadImages();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  deleteImage = async (e, id) => {
+    e.preventDefault();
+
+    try {
+      await api.delete(`admin/images/${id}`);
+
+      this.loadImages();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   renderImage = image => (
     <ImageCard key={image.id} href={image.url} target="_blank">
-      <img src={image.url} alt={image.original_name} />
-      <strong>{image.original_name}</strong>
+      <ImageContainer imageUrl={image.url} />
+      <ImageNameAndDelete>
+        <input
+          defaultValue={image.original_name}
+          onClick={e => e.preventDefault()}
+          onBlur={e => this.handleImageUpdate(image.id, e.target.value)}
+        />
+        <DeleteButton size={20} onClick={e => this.deleteImage(e, image.id)} />
+      </ImageNameAndDelete>
     </ImageCard>
   );
 

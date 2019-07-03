@@ -64,7 +64,7 @@ export const ImageCard = styled.a`
   transition: all 0.3s;
 
   &:hover {
-    background: #f5f5f5;
+    background: #f9f9f9;
   }
 
   strong {
@@ -75,5 +75,29 @@ export const ImageCard = styled.a`
   img {
     width: 80px;
     height: 80px;
+  }
+`;
+
+export const ImageContainer = styled.div`
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: ${props => `url(${props.imageUrl})`};
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+`;
+
+export const ImageNameAndDelete = styled.div`
+  width: 100%;
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+
+  input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-right: 5px;
   }
 `;
