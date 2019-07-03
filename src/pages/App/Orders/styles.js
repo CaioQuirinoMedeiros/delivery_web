@@ -48,6 +48,11 @@ export const OrderCard = styled.div`
       &:hover {
         opacity: 1;
       }
+
+      option {
+        background: #fff;
+        color: #0b2031;
+      }
     }
   }
 
