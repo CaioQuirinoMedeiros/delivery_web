@@ -40,36 +40,39 @@ export const CategoryCard = styled.div`
   border-radius: 10px;
 `;
 
+export const CategoryImage = styled.div`
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: ${props => `url(${props.imageUrl})`};
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+`;
+
+export const CategoryDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+
+  strong {
+    font-size: 18px;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #706e7b;
+
+    span {
+      color: #555;
+      font-weight: bold;
+    }
+  }
+`;
+
 export const CategoryInfo = styled.div`
   display: flex;
-
-  img {
-    flex-shrink: 0;
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    margin: 0 20px;
-
-    strong {
-      font-size: 18px;
-    }
-
-    p {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #706e7b;
-
-      span {
-        color: #555;
-        font-weight: bold;
-      }
-    }
-  }
 `;
 
 export const DeleteCategoryButton = styled(FaTrash).attrs({
@@ -89,7 +92,7 @@ export const AddCategoryButton = styled(FaPlusCircle).attrs({
   size: 46
 })`
   flex-shrink: 0;
-  margin-top: 10px;
+  margin-bottom: 10px;
   color: #f15454;
   cursor: pointer;
   transition: all 0.3s;

@@ -9,6 +9,8 @@ import {
   Container,
   CategoryCard,
   CategoryInfo,
+  CategoryImage,
+  CategoryDetails,
   DeleteCategoryButton,
   AddCategoryButton
 } from "./styles";
@@ -43,6 +45,10 @@ class Categories extends Component {
     }
   };
 
+  openModal = () => {
+    this.setState({ isModalOpen: true });
+  };
+
   closeModal = () => {
     this.setState({ isModalOpen: false });
     this.loadCategories();
@@ -51,11 +57,10 @@ class Categories extends Component {
   renderCategory = category => (
     <CategoryCard key={category.id}>
       <CategoryInfo>
-        <img
-          src={category.image ? category.image.url : NoImage}
-          alt={category.name}
+        <CategoryImage
+          imageUrl={category.image ? category.image.url : NoImage}
         />
-        <div>
+        <CategoryDetails>
           <strong>{category.name}</strong>
           <p>
             <span>Descrição: </span>
@@ -65,7 +70,7 @@ class Categories extends Component {
             <span>Tempo de cozimento: </span>
             {category.cook_time} mins
           </p>
-        </div>
+        </CategoryDetails>
       </CategoryInfo>
       <DeleteCategoryButton onClick={() => this.deleteCategory(category.id)} />
     </CategoryCard>
@@ -77,16 +82,8 @@ class Categories extends Component {
     return (
       <Container>
         {isModalOpen && <CategoryModal closeModal={this.closeModal} />}
+        <AddCategoryButton onClick={this.openModal} />
         {categories.map(category => this.renderCategory(category))}
-        {/* <button
-          type="button"
-          onClick={() => this.setState({ isModalOpen: true })}
-        >
-          Novo
-        </button> */}
-        <AddCategoryButton
-          onClick={() => this.setState({ isModalOpen: true })}
-        />
       </Container>
     );
   }
