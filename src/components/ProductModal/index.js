@@ -20,6 +20,18 @@ class ProductModal extends Component {
   componentDidMount() {
     this.loadImages();
     this.loadCategories();
+
+    document.addEventListener("click", this.clickOutsideEventListener);
+  }
+
+  clickOutsideEventListener = e => {
+    if (e.target.id === "outsideProductModal") {
+      this.props.closeModal();
+    }
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.clickOutsideEventListener);
   }
 
   loadImages = async () => {
@@ -131,7 +143,7 @@ class ProductModal extends Component {
     console.log(this.state.product_sizes);
 
     return (
-      <Container>
+      <Container id="outsideProductModal">
         <ProductForm onSubmit={this.handleCreateProduct}>
           <h2>Criar novo produto</h2>
           {!!error && <span>{error}</span>}

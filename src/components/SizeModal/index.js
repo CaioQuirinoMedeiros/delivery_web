@@ -18,6 +18,18 @@ class SizeModal extends Component {
   componentDidMount() {
     this.loadImages();
     this.loadCategories();
+
+    document.addEventListener("click", this.clickOutsideEventListener);
+  }
+
+  clickOutsideEventListener = e => {
+    if (e.target.id === "outsideSizeModal") {
+      this.props.closeModal();
+    }
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.clickOutsideEventListener);
   }
 
   loadImages = async () => {
@@ -83,7 +95,7 @@ class SizeModal extends Component {
     console.log(this.state);
 
     return (
-      <Container>
+      <Container id="outsideSizeModal">
         <SizeForm onSubmit={this.handleCreateSize}>
           <h2>Criar novo tamanho</h2>
           {!!error && <span>{error}</span>}

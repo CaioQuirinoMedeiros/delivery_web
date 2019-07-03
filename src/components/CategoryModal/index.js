@@ -16,6 +16,18 @@ class CategoryModal extends Component {
 
   componentDidMount() {
     this.loadImages();
+
+    document.addEventListener("click", this.clickOutsideEventListener);
+  }
+
+  clickOutsideEventListener = e => {
+    if (e.target.id === "outsideCategoryModal") {
+      this.props.closeModal();
+    }
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.clickOutsideEventListener);
   }
 
   loadImages = async () => {
@@ -69,7 +81,7 @@ class CategoryModal extends Component {
     const { closeModal } = this.props;
 
     return (
-      <Container>
+      <Container id="outsideCategoryModal">
         <CategoryForm onSubmit={this.handleCreateCategory}>
           <h2>Criar nova categoria</h2>
           {!!error && <span>{error}</span>}

@@ -59,7 +59,7 @@ class Products extends Component {
         <p>Preço base: {product.base_price}</p>
         <ul>
           {product.sizes.map(product_size => (
-            <li>
+            <li key={product_size.id}>
               <span>{product_size.size.name}:</span>
               <span>{convertToBRL(Number(product_size.price))}</span>
             </li>
