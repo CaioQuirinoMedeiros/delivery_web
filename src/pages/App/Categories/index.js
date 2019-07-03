@@ -10,12 +10,15 @@ import {
   CategoryCard,
   CategoryInfo,
   CategoryImage,
-  CategoryDetails,
-  CategoryOptions,
-  EditCategoryButton,
-  DeleteCategoryButton,
-  AddCategoryButton
+  CategoryDetails
 } from "./styles";
+
+import {
+  EditDeleteOptions,
+  EditButton,
+  DeleteButton,
+  AddButton
+} from "../../../styles/buttons";
 
 class Categories extends Component {
   state = {
@@ -78,12 +81,10 @@ class Categories extends Component {
           </p>
         </CategoryDetails>
       </CategoryInfo>
-      <CategoryOptions>
-        <EditCategoryButton onClick={() => this.openModal(category)} />
-        <DeleteCategoryButton
-          onClick={() => this.deleteCategory(category.id)}
-        />
-      </CategoryOptions>
+      <EditDeleteOptions>
+        <EditButton onClick={() => this.openModal(category)} />
+        <DeleteButton onClick={() => this.deleteCategory(category.id)} />
+      </EditDeleteOptions>
     </CategoryCard>
   );
 
@@ -98,7 +99,7 @@ class Categories extends Component {
             category={modal.category}
           />
         )}
-        <AddCategoryButton onClick={() => this.openModal()} />
+        <AddButton onClick={() => this.openModal()} />
         {categories.map(category => this.renderCategory(category))}
       </Container>
     );
