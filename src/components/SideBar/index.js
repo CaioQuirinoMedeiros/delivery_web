@@ -18,6 +18,12 @@ const SideBar = ({ page, changePage }) => (
       Categorias
     </li>
     <li
+      className={page === "Sizes" ? "active" : ""}
+      onClick={() => changePage("Sizes")}
+    >
+      Tamanhos
+    </li>
+    <li
       className={page === "Products" ? "active" : ""}
       onClick={() => changePage("Products")}
     >
