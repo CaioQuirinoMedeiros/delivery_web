@@ -2,14 +2,32 @@ import React, { Component } from "react";
 
 import api from "../../../services/api";
 
+import NoImage from "../../../assets/images/no-image.jpg";
+
 import SizeModal from "../../../components/SizeModal";
 
-import { Container, SizeCard } from "./styles";
+import {
+  Container,
+  SizeCard,
+  SizeInfo,
+  SizeImage,
+  SizeDetails
+} from "./styles";
+
+import {
+  EditDeleteOptions,
+  EditButton,
+  DeleteButton,
+  AddButton
+} from "../../../styles/buttons";
 
 class Sizes extends Component {
   state = {
     sizes: [],
-    isModalOpen: false
+    modal: {
+      open: false,
+      size: null
+    }
   };
 
   componentDidMount() {
@@ -37,39 +55,47 @@ class Sizes extends Component {
   };
 
   closeModal = () => {
-    this.setState({ isModalOpen: false });
+    this.setState({ modal: { open: false, size: null } });
     this.loadSizes();
+  };
+
+  openModal = (size = null) => {
+    this.setState({ modal: { open: true, size } });
   };
 
   renderSize = size => (
     <SizeCard key={size.id}>
-      <button type="button" onClick={() => this.deleteSize(size.id)}>
-        X
-      </button>
-      <img src={size.image.url} alt={size.name} />
-      <div className="sizeInfo">
-        <div>
+      <SizeInfo>
+        <SizeImage imageUrl={size.image ? size.image.url : NoImage} />
+        <SizeDetails>
           <strong>{size.name}</strong>
-          <p>Multiplicador de preço: {size.multiplier}</p>
-        </div>
-        <p>Categoria: {size.category.name}</p>
-      </div>
+          <p>
+            <span>Multiplicador de preço: </span>
+            {size.multiplier}
+          </p>
+          <p>
+            <span>Categoria: </span>
+            {size.category.name}
+          </p>
+        </SizeDetails>
+      </SizeInfo>
+      <EditDeleteOptions>
+        <EditButton onClick={() => this.openModal(size)} />
+        <DeleteButton onClick={() => this.deleteSize(size.id)} />
+      </EditDeleteOptions>
     </SizeCard>
   );
 
   render() {
-    const { sizes, isModalOpen } = this.state;
+    const { sizes, modal } = this.state;
 
     return (
       <Container>
-        {isModalOpen && <SizeModal closeModal={this.closeModal} />}
+        <AddButton onClick={() => this.openModal()} />
+        {modal.open && (
+          <SizeModal closeModal={this.closeModal} size={modal.size} />
+        )}
         {sizes.map(size => this.renderSize(size))}
-        <button
-          type="button"
-          onClick={() => this.setState({ isModalOpen: true })}
-        >
-          Novo
-        </button>
       </Container>
     );
   }
