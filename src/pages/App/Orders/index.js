@@ -5,11 +5,14 @@ import pt from "date-fns/locale/pt";
 import { convertToBRL } from "../../../services/currency";
 import api from "../../../services/api";
 
+import NoImage from "../../../assets/images/no-image.jpg";
+
 import {
   Container,
   OrderCard,
   ItemsContainer,
   ItemCard,
+  ItemImage,
   Filters
 } from "./styles";
 
@@ -114,7 +117,13 @@ class Orders extends Component {
 
   renderItem = item => (
     <ItemCard key={item.id}>
-      <img src={item.product_size.product.image.url} alt="product" />
+      <ItemImage
+        imageUrl={
+          item.product_size.product.image
+            ? item.product_size.product.image.url
+            : NoImage
+        }
+      />
       <div>
         <span>{item.product_size.product.name}</span>
         <p>Tamanho: {item.product_size.size.name}</p>

@@ -114,6 +114,16 @@ export const ItemCard = styled.div`
   }
 `;
 
+export const ItemImage = styled.div`
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: ${props => `url(${props.imageUrl})`};
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+`;
+
 export const Filters = styled.div`
   align-self: flex-start;
   display: flex;
