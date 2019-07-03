@@ -23,6 +23,12 @@ const SideBar = ({ page, changePage }) => (
     >
       Produtos
     </li>
+    <li
+      className={page === "Images" ? "active" : ""}
+      onClick={() => changePage("Images")}
+    >
+      Imagens
+    </li>
   </Container>
 );
 
