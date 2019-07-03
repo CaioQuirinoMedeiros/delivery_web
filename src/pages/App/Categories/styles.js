@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FaTrash, FaPlusCircle } from "react-icons/fa";
+import { FaTrash, FaEdit, FaPlusCircle } from "react-icons/fa";
 
 export const Container = styled.div`
   display: flex;
@@ -8,29 +8,11 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 25px 50px;
-
-  & > button {
-    position: absolute;
-    bottom: 20px;
-    right: 40px;
-    background: #f15454;
-    color: #fff;
-    width: 80px;
-    height: 80px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 50%;
-    transition: all 0.3s;
-
-    &:hover {
-      opacity: 0.9;
-    }
-  }
 `;
 
 export const CategoryCard = styled.div`
   width: 100%;
-  flex-grow: 0;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,6 +20,12 @@ export const CategoryCard = styled.div`
   margin: 10px 0;
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.75);
   border-radius: 10px;
+  cursor: default;
+  transition: all 0.3s;
+
+  &:hover {
+    background: #f9f9f9;
+  }
 `;
 
 export const CategoryImage = styled.div`
@@ -75,7 +63,27 @@ export const CategoryInfo = styled.div`
   display: flex;
 `;
 
+export const CategoryOptions = styled.div`
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 export const DeleteCategoryButton = styled(FaTrash).attrs({
+  size: 24
+})`
+  flex-shrink: 0;
+  color: #f15454;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    color: #e62638;
+  }
+`;
+export const EditCategoryButton = styled(FaEdit).attrs({
   size: 24
 })`
   flex-shrink: 0;
