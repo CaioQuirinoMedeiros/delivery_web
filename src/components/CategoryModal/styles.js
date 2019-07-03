@@ -63,7 +63,6 @@ export const CategoryForm = styled.form`
 
   button {
     font-size: 16px;
-    letter-spacing: 1.05px;
     width: 100%;
     margin-top: 10px;
     text-align: center;
