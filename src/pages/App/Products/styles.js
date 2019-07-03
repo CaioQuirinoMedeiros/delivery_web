@@ -20,6 +20,10 @@ export const ProductCard = styled.div`
   border-radius: 10px;
   cursor: default;
   transition: all 0.3s;
+
+  &:hover {
+    background: #f9f9f9;
+  }
 `;
 
 export const ProductTop = styled.div`
