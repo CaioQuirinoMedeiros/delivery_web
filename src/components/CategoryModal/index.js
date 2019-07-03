@@ -5,10 +5,10 @@ import { Container, CategoryForm } from "./styles";
 
 class CategoryModal extends Component {
   state = {
-    image_id: "",
     name: "",
     description: "",
     cook_time: "",
+    image_id: "",
     isLoading: false,
     error: "",
     images: []
@@ -99,26 +99,28 @@ class CategoryModal extends Component {
           />
           <input
             name="cook_time"
+            type="number"
+            min="0"
+            max="600"
+            step="1"
             value={cook_time}
             onChange={this.handleInputChange}
             placeholder="Tempo de cozimento"
           />
           <div>
             <label>Imagem</label>
-            <select
-              name="image_id"
-              onChange={e => this.setState({ image_id: e.target.value })}
-            >
+            <select name="image_id" onChange={this.handleInputChange}>
               {images.length &&
                 images.map(image => (
                   <option key={image.id} value={image.id}>
                     {image.original_name}
                   </option>
                 ))}
+              <option selected value="" />
             </select>
           </div>
           <button type="submit">
-            {isLoading ? "Carregando..." : "Enviar"}
+            {isLoading ? "Carregando..." : "Salvar"}
           </button>
           <button type="button" className="close" onClick={() => closeModal()}>
             Fechar
