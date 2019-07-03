@@ -124,15 +124,17 @@ export const Filters = styled.div`
     text-align: center;
     padding: 10px 5px;
     border-radius: 10px;
-    border: 1px solid #ddd;
     margin: 0 10px 15px 0;
     cursor: pointer;
     transition: all 0.3s;
 
-    &:hover,
-    &.active {
+    &:hover {
       background: #f15454;
-      border-color: #f15454;
+      color: #fff;
+    }
+
+    &.active {
+      background: #e62638;
       color: #fff;
     }
   }
