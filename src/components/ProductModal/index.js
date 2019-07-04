@@ -22,7 +22,7 @@ class ProductModal extends Component {
     this.loadCategories();
 
     const { product } = this.props;
-    console.log(product);
+
     if (product) {
       const { name, base_price, image_id, category_id, sizes } = product;
 
@@ -197,8 +197,6 @@ class ProductModal extends Component {
       sizes
     } = this.state;
     const { closeModal, product } = this.props;
-
-    console.log(this.state.product_sizes);
 
     return (
       <Container id="outsideProductModal">

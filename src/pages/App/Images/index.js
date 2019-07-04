@@ -55,7 +55,7 @@ class Images extends Component {
       this.setState({ newImage: null });
       await this.loadImages();
     } catch (err) {
-      console.log("erro: ", err);
+      console.log(err);
     }
   };
 

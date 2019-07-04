@@ -107,7 +107,6 @@ class Products extends Component {
 
   render() {
     const { products, modal } = this.state;
-    console.log(products);
 
     return (
       <Container>

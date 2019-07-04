@@ -18,8 +18,6 @@ class SizeModal extends Component {
   componentDidMount() {
     const { size } = this.props;
 
-    console.log("size: ", size);
-
     if (size) {
       const { name, multiplier, image_id, category_id } = size;
 
@@ -132,8 +130,6 @@ class SizeModal extends Component {
       categories
     } = this.state;
     const { closeModal, size } = this.props;
-
-    console.log(this.state);
 
     return (
       <Container id="outsideSizeModal">
