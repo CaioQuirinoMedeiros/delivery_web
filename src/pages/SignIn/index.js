@@ -1,28 +1,29 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
-import api from '../../services/api';
-import { login } from '../../services/auth';
+import api from "../../services/api";
+import { login } from "../../services/auth";
 
-import { Container, SignInForm } from './styles';
-import logo from '../../assets/images/logo2x.png';
+import { Container, SignInForm } from "./styles";
+import logo from "../../assets/images/logo2x.png";
 
 class SignIn extends Component {
   static propTypes = {
-    history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+    history: PropTypes.shape({ push: PropTypes.func }).isRequired
   };
 
   state = {
-    email: '',
-    password: '',
-    loading: false,
+    email: "",
+    password: "",
+    loading: false
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSignInSubmit = async (e) => {
+  handleSignInSubmit = async e => {
     e.preventDefault();
 
     const { email, password } = this.state;
@@ -31,13 +32,20 @@ class SignIn extends Component {
     try {
       this.setState({ loading: true });
 
-      const { data } = await api.post('sessions', { email, password });
+      const { data } = await api.post("sessions", { email, password });
 
-      login(data.token);
+      if (data.roles.includes("admin")) {
+        login(data.token);
 
-      history.push('/app');
+        history.push("/app");
+
+        toast.success("Bem-vindo");
+      } else {
+        toast.error("Você não é um administrador");
+      }
     } catch (err) {
       console.log(err);
+      toast.error("Credenciais inválidas");
     } finally {
       this.setState({ loading: false });
     }
@@ -66,7 +74,7 @@ class SignIn extends Component {
             placeholder="Senha secreta"
           />
 
-          <button type="submit">{loading ? 'Carregando...' : 'Entrar'}</button>
+          <button type="submit">{loading ? "Carregando..." : "Entrar"}</button>
         </SignInForm>
       </Container>
     );
