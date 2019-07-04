@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../services/api";
 import { Container, ProductForm } from "./styles";
@@ -11,7 +12,6 @@ class ProductModal extends Component {
     category_id: "",
     product_sizes: [],
     isLoading: false,
-    error: "",
     images: [],
     categories: [],
     sizes: []
@@ -57,6 +57,7 @@ class ProductModal extends Component {
       this.setState({ images: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar as imagens");
     }
   };
 
@@ -67,6 +68,7 @@ class ProductModal extends Component {
       this.setState({ categories: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar as categorias");
     }
   };
 
@@ -84,15 +86,16 @@ class ProductModal extends Component {
       this.setState({ sizes: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar os tamanhos");
     }
   };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value, error: "" });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleCategoryChange = e => {
-    this.setState({ category_id: e.target.value, error: "" });
+    this.setState({ category_id: e.target.value });
 
     this.loadSizes(e.target.value);
   };
@@ -135,9 +138,10 @@ class ProductModal extends Component {
       });
 
       closeModal();
+      toast.success("Produto atualizado!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível editar o produto" });
+      toast.error("Erro ao editar o produto, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -167,9 +171,10 @@ class ProductModal extends Component {
       });
 
       closeModal();
+      toast.success("Produto criado!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível criar o produto" });
+      toast.error("Erro ao criar o produto, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -191,7 +196,6 @@ class ProductModal extends Component {
       category_id,
       product_sizes,
       isLoading,
-      error,
       images,
       categories,
       sizes
@@ -202,7 +206,6 @@ class ProductModal extends Component {
       <Container id="outsideProductModal">
         <ProductForm onSubmit={this.handleSubmit}>
           <h2>{product ? "Editar" : "Criar"} produto</h2>
-          {!!error && <span>{error}</span>}
           <input
             name="name"
             value={name}
@@ -214,7 +217,7 @@ class ProductModal extends Component {
             type="number"
             min="0"
             max="1000"
-            step="0.1"
+            step="0.01"
             value={base_price}
             onChange={this.handleInputChange}
             placeholder="Preço base"

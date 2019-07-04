@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../../services/api";
 import { convertToBRL } from "../../../services/currency";
@@ -48,6 +49,7 @@ class Products extends Component {
       });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar produtos");
     }
   };
 
@@ -56,8 +58,10 @@ class Products extends Component {
       await api.delete(`admin/products/${id}`);
 
       this.loadProducts();
+      toast.success("Produto deletado!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível deletar o produto");
     }
   };
 

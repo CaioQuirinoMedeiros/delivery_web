@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../../services/api";
 
@@ -41,6 +42,7 @@ class Categories extends Component {
       this.setState({ categories: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar categorias");
     }
   };
 
@@ -49,8 +51,10 @@ class Categories extends Component {
       await api.delete(`admin/categories/${id}`);
 
       this.loadCategories();
+      toast.success("Categoria deletada!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível deletar a categoria");
     }
   };
 

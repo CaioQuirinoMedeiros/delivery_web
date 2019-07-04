@@ -15,22 +15,15 @@ export const Container = styled.div`
 
 export const CategoryForm = styled.form`
   display: flex;
-  width: 400px;
+  width: 450px;
   flex-direction: column;
-  padding: 30px;
+  padding: 50px;
   background: #fff;
   border-radius: 10px;
 
   h2 {
     text-align: center;
     margin-bottom: 10px;
-  }
-
-  span {
-    margin: 5px 0;
-    font-size: 13px;
-    color: #e62638;
-    text-align: center;
   }
 
   & > div {

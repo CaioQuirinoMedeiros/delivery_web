@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../../services/api";
 
@@ -41,6 +42,7 @@ class Sizes extends Component {
       this.setState({ sizes: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar tamanhos");
     }
   };
 
@@ -49,8 +51,10 @@ class Sizes extends Component {
       await api.delete(`admin/sizes/${id}`);
 
       this.loadSizes();
+      toast.success("Tamanho deletado!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível deletar o tamanho");
     }
   };
 

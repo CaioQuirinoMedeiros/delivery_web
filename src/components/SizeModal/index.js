@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../services/api";
 import { Container, SizeForm } from "./styles";
@@ -10,7 +11,6 @@ class SizeModal extends Component {
     image_id: "",
     category_id: "",
     isLoading: false,
-    error: "",
     images: [],
     categories: []
   };
@@ -47,6 +47,7 @@ class SizeModal extends Component {
       this.setState({ images: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar as imagens");
     }
   };
 
@@ -57,11 +58,12 @@ class SizeModal extends Component {
       this.setState({ categories: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar as categorias");
     }
   };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value, error: "" });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleUpdateSize = async () => {
@@ -79,9 +81,10 @@ class SizeModal extends Component {
       });
 
       closeModal();
+      toast.success("Tamanho atualizado!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível editar o tamanho" });
+      toast.error("Erro ao editar o tamanho, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -102,9 +105,10 @@ class SizeModal extends Component {
       });
 
       closeModal();
+      toast.success("Tamanho criado!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível criar o tamanho" });
+      toast.error("Erro ao criar o tamanho, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -125,7 +129,6 @@ class SizeModal extends Component {
       image_id,
       category_id,
       isLoading,
-      error,
       images,
       categories
     } = this.state;
@@ -135,7 +138,6 @@ class SizeModal extends Component {
       <Container id="outsideSizeModal">
         <SizeForm onSubmit={this.handleSubmit}>
           <h2>{size ? "Editar" : "Criar"} tamanho</h2>
-          {!!error && <span>{error}</span>}
           <input
             name="name"
             value={name}

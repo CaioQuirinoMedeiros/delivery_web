@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../services/api";
 import { Container, CategoryForm } from "./styles";
@@ -10,7 +11,6 @@ class CategoryModal extends Component {
     cook_time: "",
     image_id: "",
     isLoading: false,
-    error: "",
     images: []
   };
 
@@ -44,11 +44,12 @@ class CategoryModal extends Component {
       this.setState({ images: data });
     } catch (err) {
       console.log(err);
+      toast.warn("Erro ao buscar as imagens");
     }
   };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value, error: "" });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleUpdateCategory = async e => {
@@ -66,9 +67,10 @@ class CategoryModal extends Component {
       });
 
       closeModal();
+      toast.success("Categoria atualizada!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível editar a categoria" });
+      toast.error("Erro ao editar a categoria, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -89,9 +91,10 @@ class CategoryModal extends Component {
       });
 
       closeModal();
+      toast.success("Categoria criada!");
     } catch (err) {
       console.log(err);
-      this.setState({ error: "Não foi possível criar a categoria" });
+      toast.error("Erro ao criar a categoria, confira os dados preenchidos");
     } finally {
       this.setState({ isLoading: false });
     }
@@ -112,7 +115,6 @@ class CategoryModal extends Component {
       cook_time,
       image_id,
       isLoading,
-      error,
       images
     } = this.state;
     const { closeModal, category } = this.props;
@@ -121,7 +123,6 @@ class CategoryModal extends Component {
       <Container id="outsideCategoryModal">
         <CategoryForm onSubmit={this.handleSubmit}>
           <h2>{category ? "Editar" : "Criar"} categoria</h2>
-          {!!error && <span>{error}</span>}
           <input
             name="name"
             value={name}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { distanceInWordsToNow } from "date-fns";
 import pt from "date-fns/locale/pt";
+import { toast } from "react-toastify";
 
 import { convertToBRL } from "../../../services/currency";
 import api from "../../../services/api";
@@ -39,6 +40,7 @@ class Orders extends Component {
       this.setState({ orders: data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar os pedidos");
     }
   };
 
@@ -47,8 +49,11 @@ class Orders extends Component {
       await api.put(`admin/orders/${id}`, { status });
 
       await this.loadOrders();
+
+      toast.success("Pedido atualizado!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível atualizar o pedido");
     }
   };
 

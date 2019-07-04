@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import api from "../../../services/api";
 
@@ -32,6 +33,7 @@ class Images extends Component {
       this.setState({ images: response.data });
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao buscar imagens");
     }
   };
 
@@ -41,6 +43,7 @@ class Images extends Component {
     if (newImage) {
       newImage.url = URL.createObjectURL(newImage);
       this.setState({ newImage });
+      toast.info("Imagem pronta para ser adicionada!");
     } else {
       this.setState({ newImage: null });
     }
@@ -58,8 +61,10 @@ class Images extends Component {
 
       this.setState({ newImage: null });
       await this.loadImages();
+      toast.success("Imagem adicionada!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível adicionar a imagem");
     }
   };
 
@@ -68,8 +73,10 @@ class Images extends Component {
       await api.put(`admin/images/${id}`, { original_name });
 
       this.loadImages();
+      toast.success("Imagem editada!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível editar a imagem");
     }
   };
 
@@ -80,8 +87,10 @@ class Images extends Component {
       await api.delete(`admin/images/${id}`);
 
       this.loadImages();
+      toast.success("Imagem deletada!");
     } catch (err) {
       console.log(err);
+      toast.error("Não foi possível deletar a imagem");
     }
   };
 
