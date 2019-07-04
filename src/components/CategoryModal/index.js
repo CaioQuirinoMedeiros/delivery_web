@@ -142,7 +142,7 @@ class CategoryModal extends Component {
             step="1"
             value={cook_time}
             onChange={this.handleInputChange}
-            placeholder="Tempo de cozimento"
+            placeholder="Tempo de preparo"
           />
           <div>
             <label>Imagem</label>

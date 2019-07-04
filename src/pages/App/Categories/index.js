@@ -76,7 +76,7 @@ class Categories extends Component {
             {category.description}
           </p>
           <p>
-            <span>Tempo de cozimento: </span>
+            <span>Tempo de preparo: </span>
             {category.cook_time} mins
           </p>
         </CategoryDetails>
