@@ -11,6 +11,7 @@ export const Container = styled.div`
 
 export const NewImageContainer = styled.div`
   width: 230px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
