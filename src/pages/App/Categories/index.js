@@ -24,11 +24,11 @@ import {
 class Categories extends Component {
   state = {
     categories: [],
-    isModalOpen: false,
     modal: {
       open: false,
       category: {}
-    }
+    },
+    deleteToast: null
   };
 
   componentDidMount() {
@@ -43,6 +43,17 @@ class Categories extends Component {
     } catch (err) {
       console.log(err);
       toast.error("Erro ao buscar categorias");
+    }
+  };
+
+  deleteToastNotification = id => {
+    if (!toast.isActive(this.state.deleteToast)) {
+      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => this.deleteCategory(id),
+        autoClose: 5000
+      });
+
+      this.setState({ deleteToast });
     }
   };
 
@@ -87,7 +98,9 @@ class Categories extends Component {
       </CategoryInfo>
       <EditDeleteOptions>
         <EditButton onClick={() => this.openModal(category)} />
-        <DeleteButton onClick={() => this.deleteCategory(category.id)} />
+        <DeleteButton
+          onClick={() => this.deleteToastNotification(category.id)}
+        />
       </EditDeleteOptions>
     </CategoryCard>
   );

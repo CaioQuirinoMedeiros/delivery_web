@@ -30,7 +30,8 @@ class Products extends Component {
     modal: {
       open: false,
       product: null
-    }
+    },
+    deleteToast: null
   };
 
   componentDidMount() {
@@ -50,6 +51,17 @@ class Products extends Component {
     } catch (err) {
       console.log(err);
       toast.error("Erro ao buscar produtos");
+    }
+  };
+
+  deleteToastNotification = id => {
+    if (!toast.isActive(this.state.deleteToast)) {
+      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => this.deleteProduct(id),
+        autoClose: 5000
+      });
+
+      this.setState({ deleteToast });
     }
   };
 
@@ -95,7 +107,9 @@ class Products extends Component {
         </ProductInfo>
         <EditDeleteOptions>
           <EditButton onClick={() => this.openModal(product)} />
-          <DeleteButton onClick={() => this.deleteProduct(product.id)} />
+          <DeleteButton
+            onClick={() => this.deleteToastNotification(product.id)}
+          />
         </EditDeleteOptions>
       </ProductTop>
       <ProductBottom>

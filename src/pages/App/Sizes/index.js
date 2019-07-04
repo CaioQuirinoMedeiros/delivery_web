@@ -28,7 +28,8 @@ class Sizes extends Component {
     modal: {
       open: false,
       size: null
-    }
+    },
+    deleteToast: null
   };
 
   componentDidMount() {
@@ -43,6 +44,17 @@ class Sizes extends Component {
     } catch (err) {
       console.log(err);
       toast.error("Erro ao buscar tamanhos");
+    }
+  };
+
+  deleteToastNotification = id => {
+    if (!toast.isActive(this.state.deleteToast)) {
+      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => this.deleteSize(id),
+        autoClose: 5000
+      });
+
+      this.setState({ deleteToast });
     }
   };
 
@@ -85,7 +97,7 @@ class Sizes extends Component {
       </SizeInfo>
       <EditDeleteOptions>
         <EditButton onClick={() => this.openModal(size)} />
-        <DeleteButton onClick={() => this.deleteSize(size.id)} />
+        <DeleteButton onClick={() => this.deleteToastNotification(size.id)} />
       </EditDeleteOptions>
     </SizeCard>
   );

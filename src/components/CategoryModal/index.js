@@ -139,7 +139,7 @@ class CategoryModal extends Component {
             name="cook_time"
             type="number"
             min="0"
-            max="600"
+            max="300"
             step="1"
             value={cook_time}
             onChange={this.handleInputChange}

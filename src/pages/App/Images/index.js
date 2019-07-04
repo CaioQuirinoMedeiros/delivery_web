@@ -19,7 +19,8 @@ import { DeleteButton } from "../../../styles/buttons";
 class Images extends Component {
   state = {
     images: [],
-    newImage: null
+    newImage: null,
+    deleteToast: null
   };
 
   componentDidMount() {
@@ -80,9 +81,20 @@ class Images extends Component {
     }
   };
 
-  deleteImage = async (e, id) => {
+  deleteToastNotification = (e, id) => {
     e.preventDefault();
 
+    if (!toast.isActive(this.state.deleteToast)) {
+      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => this.deleteImage(id),
+        autoClose: 5000
+      });
+
+      this.setState({ deleteToast });
+    }
+  };
+
+  deleteImage = async id => {
     try {
       await api.delete(`admin/images/${id}`);
 
@@ -104,7 +116,10 @@ class Images extends Component {
           onBlur={e => this.handleImageUpdate(image.id, e.target.value)}
         />
 
-        <DeleteButton size={20} onClick={e => this.deleteImage(e, image.id)} />
+        <DeleteButton
+          size={20}
+          onClick={e => this.deleteToastNotification(e, image.id)}
+        />
       </ImageNameAndDelete>
     </ImageCard>
   );
