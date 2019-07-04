@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { FaPlusCircle } from "react-icons/fa";
 
 export const Container = styled.div`
   display: flex;
@@ -9,37 +10,60 @@ export const Container = styled.div`
 `;
 
 export const NewImageContainer = styled.div`
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.75);
+
+  input {
+    display: none;
+  }
+`;
+
+export const NewImageButtons = styled.div`
+  width: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+  margin-top: 5px;
 
-  div {
-    display: flex;
-    flex-direction: column;
-
-    img {
-      margin-top: 20px;
-      width: 80px;
-      height: 80px;
-    }
+  & > * {
   }
 
-  button {
-    font-size: 16px;
-    border: none;
-    background: #f15454;
+  label {
+    flex: 1;
+    color: #ccc;
+    font-size: 14px;
     font-weight: bold;
-    color: #fff;
-    padding: 10px;
+    border: 2px dotted #ddd;
     border-radius: 10px;
+    padding: 8px;
+    margin-right: 5px;
+    cursor: pointer;
     transition: all 0.3s;
 
     &:hover {
-      background: #e62638;
+      border-color: #999;
+      color: #888;
     }
+  }
+`;
+
+export const AddButton = styled(FaPlusCircle).attrs({
+  size: 22
+})`
+  flex-shrink: 0;
+  color: #f15454;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    color: #e62638;
   }
 `;
 
@@ -57,7 +81,6 @@ export const ImageCard = styled.a`
   width: 230px;
   border-radius: 10px;
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.75);
-  border-radius: 10px;
   margin: 10px;
   text-decoration: none;
   color: inherit;
@@ -70,11 +93,6 @@ export const ImageCard = styled.a`
   strong {
     text-align: center;
     margin-top: 10px;
-  }
-
-  img {
-    width: 80px;
-    height: 80px;
   }
 `;
 

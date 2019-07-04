@@ -5,6 +5,8 @@ import api from "../../../services/api";
 import {
   Container,
   NewImageContainer,
+  NewImageButtons,
+  AddButton,
   ImagesContainer,
   ImageCard,
   ImageContainer,
@@ -42,6 +44,8 @@ class Images extends Component {
     } else {
       this.setState({ newImage: null });
     }
+
+    e.target.value = "";
   };
 
   handleImageSubmit = async () => {
@@ -90,6 +94,7 @@ class Images extends Component {
           onClick={e => e.preventDefault()}
           onBlur={e => this.handleImageUpdate(image.id, e.target.value)}
         />
+
         <DeleteButton size={20} onClick={e => this.deleteImage(e, image.id)} />
       </ImageNameAndDelete>
     </ImageCard>
@@ -100,16 +105,19 @@ class Images extends Component {
 
     return (
       <Container>
-        <NewImageContainer>
-          <div>
-            <input type="file" onChange={this.handleImageChange} />
-            {newImage && <img src={newImage.url} alt="nova imagem" />}
-          </div>
-          <button type="button" onClick={this.handleImageSubmit}>
-            Salvar
-          </button>
-        </NewImageContainer>
         <ImagesContainer>
+          <NewImageContainer>
+            <input
+              id="fileInput"
+              type="file"
+              onChange={this.handleImageChange}
+            />
+            {newImage && <ImageContainer imageUrl={newImage.url} />}
+            <NewImageButtons>
+              <label htmlFor="fileInput">Carregar imagem</label>
+              {newImage && <AddButton onClick={this.handleImageSubmit} />}
+            </NewImageButtons>
+          </NewImageContainer>
           {images.map(image => this.renderImage(image))}
         </ImagesContainer>
       </Container>
