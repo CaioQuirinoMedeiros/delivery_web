@@ -21,6 +21,7 @@ export const DeleteButton = styled(FaTrash).attrs({
     color: #e62638;
   }
 `;
+
 export const EditButton = styled(FaEdit).attrs({
   size: 24
 })`

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { FaPlusCircle } from "react-icons/fa";
 
+import { DeleteButton as DeleteButtonComponent } from "../../../styles/buttons";
+
 export const Container = styled.div`
   display: flex;
   width: 100%;
@@ -68,36 +70,33 @@ export const AddButton = styled(FaPlusCircle).attrs({
   }
 `;
 
-export const ImagesContainer = styled.div`
+export const ImagesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 `;
 
-export const ImageCard = styled.a`
-  padding: 20px;
+export const ImageCard = styled.div`
   display: flex;
+  padding: 20px;
   flex-direction: column;
   align-items: center;
   width: 230px;
   border-radius: 10px;
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.75);
   margin: 10px;
-  text-decoration: none;
-  color: inherit;
   transition: all 0.3s;
 
-  &:hover {
-    background: #f9f9f9;
-  }
-
-  strong {
-    text-align: center;
-    margin-top: 10px;
+  input {
+    align-self: stretch;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-top: 15px;
   }
 `;
 
-export const ImageContainer = styled.div`
+export const ImageContainer = styled.a`
   flex-shrink: 0;
   width: 100px;
   height: 100px;
@@ -107,16 +106,7 @@ export const ImageContainer = styled.div`
   border-radius: 10px;
 `;
 
-export const ImageNameAndDelete = styled.div`
-  width: 100%;
-  display: flex;
-  margin-top: 15px;
-  align-items: center;
-
-  input {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    margin-right: 5px;
-  }
-`;
+export const DeleteButton = styled(DeleteButtonComponent)`
+  position: absolute;
+  align-self: flex-end;
+`

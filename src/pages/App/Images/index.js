@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import api from "../../../services/api";
@@ -8,145 +8,134 @@ import {
   NewImageContainer,
   NewImageButtons,
   AddButton,
-  ImagesContainer,
+  ImagesWrapper,
   ImageCard,
   ImageContainer,
-  ImageNameAndDelete
+  ImageNameAndDelete,
+  DeleteButton
 } from "./styles";
 
-import { DeleteButton } from "../../../styles/buttons";
+function ImagesContainer() {
+  const [images, setImages] = useState([]);
+  const [newImage, setNewImage] = useState(null);
+  const [deleteToast, setDeleteToast] = useState(null);
 
-class Images extends Component {
-  state = {
-    images: [],
-    newImage: null,
-    deleteToast: null
-  };
+  useEffect(() => {
+    loadImages();
+  }, []);
 
-  componentDidMount() {
-    this.loadImages();
-  }
-
-  loadImages = async () => {
+  async function loadImages() {
     try {
-      const response = await api.get("admin/images");
+      const { data } = await api.get("admin/images");
 
-      this.setState({ images: response.data });
+      setImages(data);
     } catch (err) {
       console.log(err);
       toast.error("Erro ao buscar imagens");
     }
-  };
+  }
 
-  handleImageChange = e => {
-    const newImage = e.target.files[0];
+  function handleImageChange(e) {
+    const image = e.target.files[0];
 
-    if (newImage) {
-      newImage.url = URL.createObjectURL(newImage);
-      this.setState({ newImage });
+    if (image) {
+      image.url = URL.createObjectURL(image);
+      setNewImage(image);
       toast.info("Imagem pronta para ser adicionada!");
     } else {
-      this.setState({ newImage: null });
+      setNewImage(null);
     }
 
     e.target.value = "";
-  };
+  }
 
-  handleImageSubmit = async () => {
+  async function handleImageSubmit() {
     const data = new FormData();
 
-    data.append("image", this.state.newImage);
+    data.append("image", newImage);
 
     try {
       await api.post("admin/images", data);
 
-      this.setState({ newImage: null });
-      await this.loadImages();
+      setNewImage(null);
+      await loadImages();
       toast.success("Imagem adicionada!");
     } catch (err) {
       console.log(err);
       toast.error("Não foi possível adicionar a imagem");
     }
-  };
+  }
 
-  handleImageUpdate = async (id, original_name) => {
+  async function handleImageNameUpdate(id, original_name) {
     try {
       await api.put(`admin/images/${id}`, { original_name });
 
-      this.loadImages();
+      loadImages();
       toast.success("Imagem editada!");
     } catch (err) {
       console.log(err);
       toast.error("Não foi possível editar a imagem");
     }
-  };
+  }
 
-  deleteToastNotification = (e, id) => {
+  function deleteToastNotification(e, id) {
     e.preventDefault();
 
-    if (!toast.isActive(this.state.deleteToast)) {
-      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
-        onClick: () => this.deleteImage(id),
+    if (!toast.isActive(deleteToast)) {
+      const toastToDelete = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => deleteImage(id),
         autoClose: 5000
       });
 
-      this.setState({ deleteToast });
+      setDeleteToast(toastToDelete);
     }
-  };
+  }
 
-  deleteImage = async id => {
+  async function deleteImage(id) {
     try {
       await api.delete(`admin/images/${id}`);
 
-      this.loadImages();
+      loadImages();
       toast.success("Imagem deletada!");
     } catch (err) {
       console.log(err);
       toast.error("Não foi possível deletar a imagem");
     }
-  };
+  }
 
-  renderImage = image => (
-    <ImageCard key={image.id} href={image.url} target="_blank">
-      <ImageContainer imageUrl={image.url} />
-      <ImageNameAndDelete>
+  function renderImage(image) {
+    return (
+      <ImageCard key={image.id}>
+        <ImageContainer imageUrl={image.url} href={image.url} target="_blank" />
+
         <input
           defaultValue={image.original_name}
-          onClick={e => e.preventDefault()}
-          onBlur={e => this.handleImageUpdate(image.id, e.target.value)}
+          onBlur={e => handleImageNameUpdate(image.id, e.target.value)}
         />
 
         <DeleteButton
           size={20}
-          onClick={e => this.deleteToastNotification(e, image.id)}
+          onClick={e => deleteToastNotification(e, image.id)}
         />
-      </ImageNameAndDelete>
-    </ImageCard>
-  );
-
-  render() {
-    const { images, newImage } = this.state;
-
-    return (
-      <Container>
-        <ImagesContainer>
-          <NewImageContainer>
-            <input
-              id="fileInput"
-              type="file"
-              onChange={this.handleImageChange}
-            />
-            {newImage && <ImageContainer imageUrl={newImage.url} />}
-            <NewImageButtons>
-              <label htmlFor="fileInput">Carregar imagem</label>
-              {newImage && <AddButton onClick={this.handleImageSubmit} />}
-            </NewImageButtons>
-          </NewImageContainer>
-          {images.map(image => this.renderImage(image))}
-        </ImagesContainer>
-      </Container>
+      </ImageCard>
     );
   }
+
+  return (
+    <Container>
+      <ImagesWrapper>
+        <NewImageContainer>
+          <input id="fileInput" type="file" onChange={handleImageChange} />
+          {newImage && <ImageContainer imageUrl={newImage.url} />}
+          <NewImageButtons>
+            <label htmlFor="fileInput">Carregar imagem</label>
+            {newImage && <AddButton onClick={handleImageSubmit} />}
+          </NewImageButtons>
+        </NewImageContainer>
+        {images.map(image => renderImage(image))}
+      </ImagesWrapper>
+    </Container>
+  );
 }
 
-export default Images;
+export default ImagesContainer;

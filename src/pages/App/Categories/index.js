@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import api from "../../../services/api";
@@ -21,106 +21,101 @@ import {
   AddButton
 } from "../../../styles/buttons";
 
-class Categories extends Component {
-  state = {
-    categories: [],
-    modal: {
-      open: false,
-      category: {}
-    },
-    deleteToast: null
-  };
+function Categories() {
+  const [categories, setCategories] = useState([]);
+  const [editCategory, setEditCategory] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteToast, setDeleteToast] = useState(null);
 
-  componentDidMount() {
-    this.loadCategories();
-  }
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
-  loadCategories = async () => {
+  useEffect(() => {
+    if (editCategory) {
+      setModalOpen(true)
+    }
+  }, [editCategory]);
+
+  useEffect(() => {
+    if (!modalOpen) {
+      setEditCategory(null)
+    }
+  }, [modalOpen]);
+
+  async function loadCategories() {
     try {
       const { data } = await api.get("admin/categories");
 
-      this.setState({ categories: data });
+      setCategories(data);
     } catch (err) {
       console.log(err);
       toast.error("Erro ao buscar categorias");
     }
-  };
+  }
 
-  deleteToastNotification = id => {
-    if (!toast.isActive(this.state.deleteToast)) {
-      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
-        onClick: () => this.deleteCategory(id),
-        autoClose: 5000
-      });
+  function deleteToastNotification(id) {
+    if (!toast.isActive(deleteToast)) {
+      const toastToDelete = toast.info(
+        "Clique aqui para confirmar a operação",
+        {
+          onClick: () => deleteCategory(id),
+          autoClose: 5000
+        }
+      );
 
-      this.setState({ deleteToast });
+      setDeleteToast(toastToDelete);
     }
-  };
+  }
 
-  deleteCategory = async id => {
+  async function deleteCategory(id) {
     try {
       await api.delete(`admin/categories/${id}`);
 
-      this.loadCategories();
+      loadCategories();
       toast.success("Categoria deletada!");
     } catch (err) {
       console.log(err);
       toast.error("Não foi possível deletar a categoria");
     }
-  };
+  }
 
-  closeModal = () => {
-    this.setState({ modal: { open: false, category: null } });
-    this.loadCategories();
-  };
-
-  openModal = (category = null) => {
-    this.setState({ modal: { open: true, category } });
-  };
-
-  renderCategory = category => (
-    <CategoryCard key={category.id}>
-      <CategoryInfo>
-        <CategoryImage
-          imageUrl={category.image ? category.image.url : NoImage}
-        />
-        <CategoryDetails>
-          <strong>{category.name}</strong>
-          <p>
-            <span>Descrição: </span>
-            {category.description}
-          </p>
-          <p>
-            <span>Tempo de preparo: </span>
-            {category.cook_time} mins
-          </p>
-        </CategoryDetails>
-      </CategoryInfo>
-      <EditDeleteOptions>
-        <EditButton onClick={() => this.openModal(category)} />
-        <DeleteButton
-          onClick={() => this.deleteToastNotification(category.id)}
-        />
-      </EditDeleteOptions>
-    </CategoryCard>
-  );
-
-  render() {
-    const { categories, modal } = this.state;
-
+  function renderCategory(category) {
     return (
-      <Container>
-        {modal.open && (
-          <CategoryModal
-            closeModal={this.closeModal}
-            category={modal.category}
+      <CategoryCard key={category.id}>
+        <CategoryInfo>
+          <CategoryImage
+            imageUrl={category.image ? category.image.url : NoImage}
           />
-        )}
-        <AddButton onClick={() => this.openModal()} />
-        {categories.map(category => this.renderCategory(category))}
-      </Container>
+          <CategoryDetails>
+            <strong>{category.name}</strong>
+            <p>
+              <span>Descrição: </span>
+              {category.description}
+            </p>
+            <p>
+              <span>Tempo de preparo: </span>
+              {category.cook_time} mins
+            </p>
+          </CategoryDetails>
+        </CategoryInfo>
+        <EditDeleteOptions>
+          <EditButton onClick={() => setEditCategory(category)} />
+          <DeleteButton onClick={() => deleteToastNotification(category.id)} />
+        </EditDeleteOptions>
+      </CategoryCard>
     );
   }
+
+  return (
+    <Container>
+      {!!modalOpen && (
+        <CategoryModal closeModal={() => setModalOpen(false)} category={editCategory} />
+      )}
+      <AddButton onClick={() => setModalOpen(true)} />
+      {categories.map(category => renderCategory(category))}
+    </Container>
+  );
 }
 
 export default Categories;
