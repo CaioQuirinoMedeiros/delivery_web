@@ -1,151 +1,166 @@
-import React, { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
-import api from '../../services/api'
-import { Container, CategoryForm } from './styles'
+import api from "../../services/api";
+import { Container, CategoryForm } from "./styles";
 
-function CategoryModal ({ category, closeModal }) {
+function CategoryModal({ category, closeModal }) {
   const [newCategory, setNewCategory] = useState({
-    name: '',
-    description: '',
-    cook_time: '',
-    image_id: ''
-  })
-  const [images, setImages] = useState([])
-  const [loading, setLoading] = useState(false)
+    name: "",
+    description: "",
+    cook_time: "",
+    image_id: ""
+  });
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadImages()
-    document.addEventListener('click', clickOutsideEventListener)
+    loadImages();
+    document.addEventListener("click", clickOutsideEventListener);
 
-    return document.removeEventListener('click', clickOutsideEventListener)
-  }, [])
+    return document.removeEventListener("click", clickOutsideEventListener);
+  }, []);
 
   useEffect(() => {
     if (category) {
-      setNewCategory({ ...category })
+      setNewCategory({ ...category });
     }
-  }, [category])
+  }, [category]);
 
-  function clickOutsideEventListener (e) {
-    if (e.target.id === 'outsideCategoryModal') {
-      closeModal()
+  function clickOutsideEventListener(e) {
+    if (e.target.id === "outsideCategoryModal") {
+      closeModal();
     }
   }
 
-  async function loadImages () {
+  async function loadImages() {
     try {
-      const { data } = await api.get('admin/images')
+      const { data } = await api.get("admin/images");
 
-      setImages(data)
+      setImages(data);
     } catch (err) {
-      toast.warn('Erro ao buscar as imagens')
+      toast.warn("Erro ao buscar as imagens");
     }
   }
 
-  function handleInputChange (e) {
-    setNewCategory({ ...newCategory, [e.target.name]: e.target.value })
+  function handleInputChange(e) {
+    setNewCategory({ ...newCategory, [e.target.name]: e.target.value });
   }
 
-  async function handleUpdateCategory () {
-    const { id, name, description, cook_time, image_id } = newCategory
+  async function handleUpdateCategory() {
+    const { id, name, description, cook_time, image_id } = newCategory;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       await api.put(`admin/categories/${id}`, {
         name,
         description,
         cook_time,
         image_id
-      })
+      });
 
-      closeModal()
-      toast.success('Categoria atualizada!')
+      closeModal();
+      toast.success("Categoria atualizada!");
     } catch (err) {
-      toast.error('Erro ao editar a categoria, confira os dados preenchidos')
+      toast.error("Erro ao editar a categoria, confira os dados preenchidos");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  async function handleCreateCategory () {
-    const { name, description, cook_time, image_id } = newCategory
+  async function handleCreateCategory() {
+    const { name, description, cook_time, image_id } = newCategory;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
-      await api.post('admin/categories', {
+      await api.post("admin/categories", {
         name,
         description,
         cook_time,
         image_id
-      })
+      });
 
-      closeModal()
-      toast.success('Categoria criada!')
+      closeModal();
+      toast.success("Categoria criada!");
     } catch (err) {
-      toast.error('Erro ao criar a categoria, confira os dados preenchidos')
+      toast.error("Erro ao criar a categoria, confira os dados preenchidos");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  function handleSubmit (e) {
-    e.preventDefault()
+  function handleSubmit(e) {
+    e.preventDefault();
 
     if (category) {
-      handleUpdateCategory()
+      handleUpdateCategory();
     } else {
-      handleCreateCategory()
+      handleCreateCategory();
     }
   }
 
   return (
-    <Container id='outsideCategoryModal'>
+    <Container id="outsideCategoryModal">
       <CategoryForm onSubmit={handleSubmit}>
-        <h2>{category ? 'Editar' : 'Criar'} categoria</h2>
+        <h2>{category ? "Editar" : "Criar"} categoria</h2>
         <input
-          name='name'
+          name="name"
           value={newCategory.name}
           onChange={handleInputChange}
-          placeholder='Nome'
+          placeholder="Nome"
         />
         <input
-          name='description'
+          name="description"
           value={newCategory.description}
           onChange={handleInputChange}
-          placeholder='Descrição'
+          placeholder="Descrição"
         />
         <input
-          name='cook_time'
-          type='number'
-          min='0'
-          max='300'
-          step='1'
+          name="cook_time"
+          type="number"
+          min="0"
+          max="300"
+          step="1"
           value={newCategory.cook_time}
           onChange={handleInputChange}
-          placeholder='Tempo de preparo'
+          placeholder="Tempo de preparo"
         />
         <div>
           <label>Imagem</label>
-          <select name='image_id' value={newCategory.image_id} onChange={handleInputChange}>
+          <select
+            name="image_id"
+            value={newCategory.image_id}
+            onChange={handleInputChange}
+          >
             {images.length &&
               images.map(image => (
                 <option key={image.id} value={image.id}>
                   {image.original_name}
                 </option>
               ))}
-            <option selected value='' />
+            <option selected value="" />
           </select>
         </div>
-        <button type='submit'>{loading ? 'Carregando...' : 'Salvar'}</button>
-        <button type='button' className='close' onClick={() => closeModal()}>
+        <button type="submit">{loading ? "Carregando..." : "Salvar"}</button>
+        <button type="button" className="close" onClick={() => closeModal()}>
           Fechar
         </button>
       </CategoryForm>
     </Container>
-  )
+  );
 }
 
-export default CategoryModal
+CategoryModal.propTypes = {
+  category: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    cook_time: PropTypes.string,
+    image_id: PropTypes.string
+  })
+};
+
+export default CategoryModal;
