@@ -8,14 +8,14 @@ This project is part of the final challenge of [Rocketseat bootcamp course](http
 
 ## Integration
 
-This app integrates with an [API](https://github.com/CaioQuirinoMedeiros/delivery_api) built with NodeJS and it's designed to manage the application. There's a [mobile app](https://github.com/CaioQuirinoMedeiros/delivery_app) intended for customers
+This web app integrates with an [API](https://github.com/CaioQuirinoMedeiros/delivery_api) built with NodeJS and it's designed to manage the application. There's a [mobile app](https://github.com/CaioQuirinoMedeiros/delivery_app) intended for customers
 
 ## Try it now
 
 I deployed this project on Netlify, try it out: [pizza-delivery.com](https://objective-raman-c63c72.netlify.com/app)
 
-- email: caio1@gmail.com
-- password: 123123
+- email: `caio1@gmail.com`
+- password: `123123`
 
 **Note**
 Remember that this web app is for managing the application, try the [app for customers](https://github.com/CaioQuirinoMedeiros/delivery_app) too
