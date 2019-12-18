@@ -145,7 +145,7 @@ function CategoryModal({ category, closeModal }) {
                   {image.original_name}
                 </option>
               ))}
-            <option selected value="" />
+            <option value="" />
           </select>
         </div>
         <button type="submit">{loading ? "Carregando..." : "Salvar"}</button>

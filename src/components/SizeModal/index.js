@@ -147,7 +147,7 @@ function SizeModal({ size, closeModal }) {
                   {image.original_name}
                 </option>
               ))}
-            <option selected value="" />
+            <option value="" />
           </select>
         </div>
         <div>
@@ -163,7 +163,7 @@ function SizeModal({ size, closeModal }) {
                   {category.name}
                 </option>
               ))}
-            <option selected value="" />
+            <option value="" />
           </select>
         </div>
         <button type="submit">{loading ? "Carregando..." : "Salvar"}</button>
