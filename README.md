@@ -8,7 +8,7 @@ This project is part of the final challenge of [Rocketseat bootcamp course](http
 
 ## Integration
 
-This app integrates with an [API](https://github.com/CaioQuirinoMedeiros/delivery_api) built with NodeJS and it's designed to manage the application. There's a [mobile app](https://github.com/CaioQuirinoMedeiros/delivery_app) intended for customers
+This web app integrates with an [API](https://github.com/CaioQuirinoMedeiros/delivery_api) built with NodeJS and it's designed to manage the application. There's a [mobile app](https://github.com/CaioQuirinoMedeiros/delivery_app) intended for customers
 
 ## Try it now
 
