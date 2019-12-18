@@ -1,6 +1,6 @@
 # Pizza Delivery - Web
 
-<img src="/public/pizza-delivery-thumb.png.jpg" width="400">
+<img src="/public/pizza-delivery-thumb.png" width="400">
 
 ## About
 
