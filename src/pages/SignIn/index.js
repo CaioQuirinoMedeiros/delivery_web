@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
@@ -8,29 +8,16 @@ import { login } from "../../services/auth";
 import { Container, SignInForm } from "./styles";
 import logo from "../../assets/images/logo2x.png";
 
-class SignIn extends Component {
-  static propTypes = {
-    history: PropTypes.shape({ push: PropTypes.func }).isRequired
-  };
+function SignIn ({ history }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState('')
 
-  state = {
-    email: "",
-    password: "",
-    loading: false
-  };
-
-  handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleSignInSubmit = async e => {
+  async function handleSignInSubmit (e) {
     e.preventDefault();
 
-    const { email, password } = this.state;
-    const { history } = this.props;
-
     try {
-      this.setState({ loading: true });
+      setLoading(true)
 
       const { data } = await api.post("sessions", { email, password });
 
@@ -44,33 +31,29 @@ class SignIn extends Component {
         toast.error("Você não é um administrador");
       }
     } catch (err) {
-      console.log(err);
       toast.error("Credenciais inválidas");
     } finally {
-      this.setState({ loading: false });
+      setLoading(false)
     }
   };
 
-  render() {
-    const { email, password, loading } = this.state;
-
     return (
       <Container>
-        <SignInForm onSubmit={this.handleSignInSubmit}>
+        <SignInForm onSubmit={handleSignInSubmit}>
           <img src={logo} alt="logo" />
 
           <input
             type="email"
             name="email"
             value={email}
-            onChange={e => this.handleInputChange(e)}
+            onChange={e => setEmail(e.target.value)}
             placeholder="Seu e-mail"
           />
           <input
             type="password"
             name="password"
             value={password}
-            onChange={e => this.handleInputChange(e)}
+            onChange={e => setPassword(e.target.value)}
             placeholder="Senha secreta"
           />
 
@@ -78,7 +61,6 @@ class SignIn extends Component {
         </SignInForm>
       </Container>
     );
-  }
 }
 
 export default SignIn;
