@@ -37,6 +37,8 @@ function filterReducer (state, action) {
       return { ...state, enviado: !state.enviado }
     case 'finalizado':
       return { ...state, finalizado: !state.finalizado }
+    default:
+      return state
   }
 }
 

@@ -50,7 +50,6 @@ function Categories() {
 
       setCategories(data);
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar categorias");
     }
   }
@@ -76,7 +75,6 @@ function Categories() {
       loadCategories();
       toast.success("Categoria deletada!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível deletar a categoria");
     }
   }

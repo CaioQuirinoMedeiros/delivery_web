@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
@@ -15,14 +15,20 @@ function CategoryModal({ category, closeModal }) {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const clickOutside = useCallback(function clickOutsideEventListener(e) {
+    if (e.target.id === "outsideCategoryModal") {
+      closeModal();
+    }
+  }, [closeModal]);
+
   useEffect(() => {
     loadImages();
-    document.addEventListener("click", clickOutsideEventListener);
+    document.addEventListener("click", clickOutside);
 
     return () => {
-      document.removeEventListener("click", clickOutsideEventListener);
+      document.removeEventListener("click", clickOutside);
     };
-  }, []);
+  }, [clickOutside]);
 
   useEffect(() => {
     if (category) {
@@ -30,12 +36,7 @@ function CategoryModal({ category, closeModal }) {
     }
   }, [category]);
 
-  function clickOutsideEventListener(e) {
-    console.log("clicou", e.target);
-    if (e.target.id === "outsideCategoryModal") {
-      closeModal();
-    }
-  }
+
 
   async function loadImages() {
     try {

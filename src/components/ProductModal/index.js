@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
@@ -18,35 +18,37 @@ function ProductModal({ product, closeModal }) {
   const [sizes, setSizes] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const clickOutside = useCallback(
+    function clickOutsideEventListener(e) {
+      if (e.target.id === "outsideCategoryModal") {
+        closeModal();
+      }
+    },
+    [closeModal]
+  );
+
   useEffect(() => {
     loadImages();
     loadCategories();
-    document.addEventListener("click", clickOutsideEventListener);
+    document.addEventListener("click", clickOutside);
 
     return () => {
-      document.removeEventListener("click", clickOutsideEventListener);
+      document.removeEventListener("click", clickOutside);
     };
-  }, []);
+  }, [clickOutside]);
 
   useEffect(() => {
     if (product) {
       setNewProduct({
         ...product,
-        product_sizes: sizes.map(product_size => product_size.id)
+        product_sizes: product.sizes.map(size => size.size_id)
       });
-      loadSizes(product.category_id);
     }
   }, [product]);
 
   useEffect(() => {
     loadSizes();
   }, [newProduct.category_id]);
-
-  function clickOutsideEventListener(e) {
-    if (e.target.id === "outsideProductModal") {
-      closeModal();
-    }
-  }
 
   async function loadImages() {
     try {
@@ -204,7 +206,7 @@ function ProductModal({ product, closeModal }) {
                   {image.original_name}
                 </option>
               ))}
-            <option value="" selected />
+            <option value="" />
           </select>
         </div>
         <div>
@@ -220,13 +222,14 @@ function ProductModal({ product, closeModal }) {
                   {category.name}
                 </option>
               ))}
-            <option value="" selected />
+            <option value="" />
           </select>
         </div>
         <div>
           <label>Tamanhos</label>
           <select
             multiple
+            value={newProduct.product_sizes}
             name="product_sizes"
             onChange={e => {
               handleProductSizesChange(e);
@@ -234,11 +237,7 @@ function ProductModal({ product, closeModal }) {
           >
             {sizes.length &&
               sizes.map(size => (
-                <option
-                  key={size.id}
-                  value={size.id}
-                  selected={newProduct.product_sizes.includes(size.id)}
-                >
+                <option key={size.id} value={size.id}>
                   {size.name}
                 </option>
               ))}
