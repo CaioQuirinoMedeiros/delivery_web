@@ -1,57 +1,43 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react'
 
-import SideBar from "../../components/SideBar";
-import Header from "../../components/Header";
+import SideBar from '../../components/SideBar'
+import Header from '../../components/Header'
 
-import Orders from "./Orders";
-import Categories from "./Categories";
-import Sizes from "./Sizes";
-import Products from "./Products";
-import Images from "./Images";
+import Orders from './Orders'
+import Categories from './Categories'
+import Sizes from './Sizes'
+import Products from './Products'
+import Images from './Images'
 
-import { Container, Main } from "./styles";
+import { Container, Main } from './styles'
 
-class App extends PureComponent {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func
-    }).isRequired
-  };
+function App ({ history }) {
+  const [activePage, setActivePage] = useState('Orders')
 
-  state = {
-    activePage: "Orders"
-  };
-
-  changePage = page => {
-    this.setState({ activePage: page });
-  };
-
-  render() {
-    const { activePage } = this.state;
-    const { history } = this.props;
-
-    return (
-      <Container>
-        <Header history={history} />
-        <Main>
-          <SideBar page={activePage} changePage={this.changePage} />
-
-          {activePage === "Orders" ? (
-            <Orders />
-          ) : activePage === "Categories" ? (
-            <Categories />
-          ) : activePage === "Sizes" ? (
-            <Sizes />
-          ) : activePage === "Products" ? (
-            <Products />
-          ) : activePage === "Images" ? (
-            <Images />
-          ) : null}
-        </Main>
-      </Container>
-    );
+  function changePage (page) {
+    setActivePage(page)
   }
+
+  return (
+    <Container>
+      <Header history={history} />
+      <Main>
+        <SideBar page={activePage} changePage={changePage} />
+
+        {activePage === 'Orders' ? (
+          <Orders />
+        ) : activePage === 'Categories' ? (
+          <Categories />
+        ) : activePage === 'Sizes' ? (
+          <Sizes />
+        ) : activePage === 'Products' ? (
+          <Products />
+        ) : activePage === 'Images' ? (
+          <Images />
+        ) : null}
+      </Main>
+    </Container>
+  )
 }
 
-export default App;
+export default App

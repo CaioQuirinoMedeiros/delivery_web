@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { distanceInWordsToNow } from "date-fns";
-import pt from "date-fns/locale/pt";
-import { toast } from "react-toastify";
+import React, { useState, useEffect, useReducer } from 'react'
+import { distanceInWordsToNow } from 'date-fns'
+import pt from 'date-fns/locale/pt'
+import { toast } from 'react-toastify'
 
-import { convertToBRL } from "../../../services/currency";
-import api from "../../../services/api";
+import { convertToBRL } from '../../../services/currency'
+import api from '../../../services/api'
 
-import NoImage from "../../../assets/images/no-image.jpg";
+import NoImage from '../../../assets/images/no-image.jpg'
 
 import {
   Container,
@@ -15,91 +15,94 @@ import {
   ItemCard,
   ItemImage,
   Filters
-} from "./styles";
+} from './styles'
 
-class Orders extends Component {
-  state = {
-    orders: [],
-    filters: {
-      pendente: true,
-      cancelado: false,
-      pago: true,
-      enviado: true,
-      finalizado: false
+const INITIAL_STATE = {
+  pendente: true,
+  cancelado: false,
+  pago: true,
+  enviado: true,
+  finalizado: false
+}
+
+function filterReducer (state, action) {
+  switch (action.type) {
+    case 'pendente':
+      return { ...state, pendente: !state.pendente }
+    case 'cancelado':
+      return { ...state, cancelado: !state.cancelado }
+    case 'pago':
+      return { ...state, pago: !state.pago }
+    case 'enviado':
+      return { ...state, enviado: !state.enviado }
+    case 'finalizado':
+      return { ...state, finalizado: !state.finalizado }
+  }
+}
+
+function Orders () {
+  const [orders, setOrders] = useState([])
+  const [filters, dispatch] = useReducer(filterReducer, INITIAL_STATE)
+
+  useEffect(() => {
+    loadOrders()
+  }, [])
+
+  async function loadOrders () {
+    try {
+      const { data } = await api.get('admin/orders')
+
+      setOrders(data)
+    } catch (err) {
+      toast.error('Erro ao buscar os pedidos')
     }
-  };
-
-  componentDidMount() {
-    this.loadOrders();
   }
 
-  loadOrders = async () => {
+  async function updateOrderStatus (id, status) {
     try {
-      const { data } = await api.get("admin/orders");
+      await api.put(`admin/orders/${id}`, { status })
 
-      this.setState({ orders: data });
+      await loadOrders()
+
+      toast.success('Pedido atualizado!')
     } catch (err) {
-      console.log(err);
-      toast.error("Erro ao buscar os pedidos");
+      toast.error('Não foi possível atualizar o pedido')
     }
-  };
+  }
 
-  updateOrderStatus = async (id, status) => {
-    try {
-      await api.put(`admin/orders/${id}`, { status });
-
-      await this.loadOrders();
-
-      toast.success("Pedido atualizado!");
-    } catch (err) {
-      console.log(err);
-      toast.error("Não foi possível atualizar o pedido");
-    }
-  };
-
-  toggleFilter = filter => {
-    this.setState({
-      filters: { ...this.state.filters, [filter[0]]: !filter[1] }
-    });
-  };
-
-  renderFilters = () => {
-    const { filters } = this.state;
-
+  function renderFilters () {
     return (
       <Filters>
-        {Object.entries(filters).map(filter => (
+        {Object.keys(filters).map(filter => (
           <div
-            onClick={() => this.toggleFilter(filter)}
-            key={filter[0]}
-            className={filter[1] ? "active" : ""}
+            key={filter}
+            onClick={() => dispatch({ type: filter })}
+            className={filters[filter] ? 'active' : ''}
           >
-            {filter[0]}
+            {filter}
           </div>
         ))}
       </Filters>
-    );
-  };
+    )
+  }
 
-  renderOrder = order => {
-    const { filters } = this.state;
-
+  function renderOrder (order) {
     return filters[order.status] ? (
       <OrderCard key={order.id} status={order.status}>
-        <div className="orderHeader">
+        <div className='orderHeader'>
           <h2>
             Pedido <strong>#{order.id}</strong> - {order.user.name}
           </h2>
           <select
-            name="status"
+            name='status'
             value={order.status}
-            onChange={e => this.updateOrderStatus(order.id, e.target.value)}
+            onChange={e => updateOrderStatus(order.id, e.target.value)}
           >
-            <option value="pendente">pendente</option>
-            <option value="cancelado">cancelado</option>
-            <option value="enviado">enviado</option>
-            <option value="pago">pago</option>
-            <option value="finalizado">finalizado</option>
+            <option value='pendente'>pendente</option>
+            <option value='cancelado'>cancelado</option>
+            <option value='enviado'>enviado</option>
+            <option value='pago'>pago</option>
+            <option value='finalizado'>finalizado</option>
           </select>
         </div>
         <p>
@@ -110,42 +113,41 @@ class Orders extends Component {
         </p>
         <strong>{convertToBRL(Number(order.total))}</strong>
         <ItemsContainer>
-          {order.items.map(item => this.renderItem(item))}
+          {order.items.map(item => renderItem(item))}
         </ItemsContainer>
         <span>
           <strong>Observações: </strong>
           {order.observations}
         </span>
       </OrderCard>
-    ) : null;
-  };
-
-  renderItem = item => (
-    <ItemCard key={item.id}>
-      <ItemImage
-        imageUrl={
-          item.product_size.product.image
-            ? item.product_size.product.image.url
-            : NoImage
-        }
-      />
-      <div>
-        <span>{item.product_size.product.name}</span>
-        <p>Tamanho: {item.product_size.size.name}</p>
-        <p>Quantidade: {item.quantity}</p>
-      </div>
-    </ItemCard>
-  );
-
-  render() {
-    const { orders } = this.state;
-    return (
-      <Container>
-        {this.renderFilters()}
-        {orders.map(order => this.renderOrder(order))}
-      </Container>
-    );
+    ) : null
   }
+
+  function renderItem (item) {
+    return (
+      <ItemCard key={item.id}>
+        <ItemImage
+          imageUrl={
+            item.product_size.product.image
+              ? item.product_size.product.image.url
+              : NoImage
+          }
+        />
+        <div>
+          <span>{item.product_size.product.name}</span>
+          <p>Tamanho: {item.product_size.size.name}</p>
+          <p>Quantidade: {item.quantity}</p>
+        </div>
+      </ItemCard>
+    )
+  }
+
+  return (
+    <Container>
+      {renderFilters()}
+      {orders.map(order => renderOrder(order))}
+    </Container>
+  )
 }
 
-export default Orders;
+export default Orders

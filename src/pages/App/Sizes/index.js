@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import api from "../../../services/api";
@@ -22,64 +22,62 @@ import {
   AddButton
 } from "../../../styles/buttons";
 
-class Sizes extends Component {
-  state = {
-    sizes: [],
-    modal: {
-      open: false,
-      size: null
-    },
-    deleteToast: null
-  };
+function Sizes () {
+  const [sizes, setSizes] = useState([])
+  const [editSize, setEditSize] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [deleteToast, setDeleteToast] = useState(null)
 
-  componentDidMount() {
-    this.loadSizes();
-  }
+  useEffect(() => {
+    loadSizes()
+  }, [])
 
-  loadSizes = async () => {
+  useEffect(() => {
+    if (editSize) {
+      setModalOpen(true)
+    }
+  }, [editSize])
+
+  useEffect(() => {
+    if (!modalOpen) {
+      setEditSize(null)
+    }
+  }, [modalOpen])
+
+  async function loadSizes () {
     try {
       const { data } = await api.get("admin/sizes");
 
-      this.setState({ sizes: data });
+      setSizes(data)
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar tamanhos");
     }
   };
 
-  deleteToastNotification = id => {
-    if (!toast.isActive(this.state.deleteToast)) {
-      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
-        onClick: () => this.deleteSize(id),
+  function deleteToastNotification (id) {
+    if (!toast.isActive(deleteToast)) {
+      const toastToDelete = toast.info("Clique aqui para confirmar a operação", {
+        onClick: () => deleteSize(id),
         autoClose: 5000
       });
 
-      this.setState({ deleteToast });
+      setDeleteToast(toastToDelete)
     }
   };
 
-  deleteSize = async id => {
+  async function deleteSize (id) {
     try {
       await api.delete(`admin/sizes/${id}`);
 
-      this.loadSizes();
+      loadSizes();
       toast.success("Tamanho deletado!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível deletar o tamanho");
     }
   };
 
-  closeModal = () => {
-    this.setState({ modal: { open: false, size: null } });
-    this.loadSizes();
-  };
-
-  openModal = (size = null) => {
-    this.setState({ modal: { open: true, size } });
-  };
-
-  renderSize = size => (
+  function renderSize (size) {
+    return (
     <SizeCard key={size.id}>
       <SizeInfo>
         <SizeImage imageUrl={size.image ? size.image.url : NoImage} />
@@ -96,25 +94,22 @@ class Sizes extends Component {
         </SizeDetails>
       </SizeInfo>
       <EditDeleteOptions>
-        <EditButton onClick={() => this.openModal(size)} />
-        <DeleteButton onClick={() => this.deleteToastNotification(size.id)} />
+        <EditButton onClick={() => setEditSize(size)} />
+        <DeleteButton onClick={() => deleteToastNotification(size.id)} />
       </EditDeleteOptions>
     </SizeCard>
   );
-
-  render() {
-    const { sizes, modal } = this.state;
+    }
 
     return (
       <Container>
-        <AddButton onClick={() => this.openModal()} />
-        {modal.open && (
-          <SizeModal closeModal={this.closeModal} size={modal.size} />
+        <AddButton onClick={() => setModalOpen(true)} />
+        {modalOpen && (
+          <SizeModal closeModal={() => setModalOpen(false)} size={editSize} />
         )}
-        {sizes.map(size => this.renderSize(size))}
+        {sizes.map(size => renderSize(size))}
       </Container>
     );
-  }
 }
 
 export default Sizes;

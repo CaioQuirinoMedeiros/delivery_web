@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 
-import api from "../../../services/api";
-import { convertToBRL } from "../../../services/currency";
+import api from '../../../services/api'
+import { convertToBRL } from '../../../services/currency'
 
-import NoImage from "../../../assets/images/no-image.jpg";
-import ProductModal from "../../../components/ProductModal";
+import NoImage from '../../../assets/images/no-image.jpg'
+import ProductModal from '../../../components/ProductModal'
 
 import {
   Container,
@@ -15,127 +15,128 @@ import {
   ProductInfo,
   ProductDetails,
   ProductBottom
-} from "./styles";
+} from './styles'
 
 import {
   EditDeleteOptions,
   EditButton,
   DeleteButton,
   AddButton
-} from "../../../styles/buttons";
+} from '../../../styles/buttons'
 
-class Products extends Component {
-  state = {
-    products: [],
-    modal: {
-      open: false,
-      product: null
-    },
-    deleteToast: null
-  };
+function Products () {
+  const [products, setProducts] = useState([])
+  const [editProduct, setEditProduct] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [deleteToast, setDeleteToast] = useState(null)
 
-  componentDidMount() {
-    this.loadProducts();
-  }
+  useEffect(() => {
+    loadProducts()
+  }, [])
 
-  loadProducts = async () => {
+  useEffect(() => {
+    if (editProduct) {
+      setModalOpen(true)
+    }
+  }, [editProduct])
+
+  useEffect(() => {
+    if (!modalOpen) {
+      setEditProduct(null)
+    }
+  }, [modalOpen])
+
+  async function loadProducts () {
     try {
-      const { data } = await api.get("admin/products");
+      const { data } = await api.get('admin/products')
 
-      this.setState({
-        products: data.map(product => ({
+      setProducts(
+        data.map(product => ({
           ...product,
           base_price_formatted: convertToBRL(Number(product.base_price))
         }))
-      });
+      )
     } catch (err) {
-      console.log(err);
-      toast.error("Erro ao buscar produtos");
+      toast.error('Erro ao buscar produtos')
     }
-  };
-
-  deleteToastNotification = id => {
-    if (!toast.isActive(this.state.deleteToast)) {
-      const deleteToast = toast.info("Clique aqui para confirmar a operação", {
-        onClick: () => this.deleteProduct(id),
-        autoClose: 5000
-      });
-
-      this.setState({ deleteToast });
-    }
-  };
-
-  deleteProduct = async id => {
-    try {
-      await api.delete(`admin/products/${id}`);
-
-      this.loadProducts();
-      toast.success("Produto deletado!");
-    } catch (err) {
-      console.log(err);
-      toast.error("Não foi possível deletar o produto");
-    }
-  };
-
-  closeModal = () => {
-    this.setState({ modal: { open: false, product: null } });
-    this.loadProducts();
-  };
-
-  openModal = (product = null) => {
-    this.setState({ modal: { open: true, product } });
-  };
-
-  renderProduct = product => (
-    <ProductCard key={product.id}>
-      <ProductTop>
-        <ProductInfo>
-          <ProductImage
-            imageUrl={product.image ? product.image.url : NoImage}
-          />
-          <ProductDetails>
-            <strong>{product.name}</strong>
-            <p>
-              <span>Categoria: </span>
-              {product.category.name}
-            </p>
-            <p>
-              <span>Preço base: </span>
-              {product.base_price_formatted}
-            </p>
-          </ProductDetails>
-        </ProductInfo>
-        <EditDeleteOptions>
-          <EditButton onClick={() => this.openModal(product)} />
-          <DeleteButton
-            onClick={() => this.deleteToastNotification(product.id)}
-          />
-        </EditDeleteOptions>
-      </ProductTop>
-      <ProductBottom>
-        {product.sizes.map(product_size => (
-          <p key={product_size.id}>
-            <span>{product_size.size.name}: </span>
-            {convertToBRL(Number(product_size.price))}
-          </p>
-        ))}
-      </ProductBottom>
-    </ProductCard>
-  );
-
-  render() {
-    const { products, modal } = this.state;
-
-    return (
-      <Container>
-        <AddButton onClick={() => this.openModal()} />
-        {modal.open && (
-          <ProductModal closeModal={this.closeModal} product={modal.product} />
-        )}
-        {products.map(product => this.renderProduct(product))}
-      </Container>
-    );
   }
+
+  function deleteToastNotification (id) {
+    if (!toast.isActive(deleteToast)) {
+      const toastToDelete = toast.info(
+        'Clique aqui para confirmar a operação',
+        {
+          onClick: () => deleteProduct(id),
+          autoClose: 5000
+        }
+      )
+
+      setDeleteToast(toastToDelete)
+    }
+  }
+
+  async function deleteProduct (id) {
+    try {
+      await api.delete(`admin/products/${id}`)
+
+      loadProducts()
+      toast.success('Produto deletado!')
+    } catch (err) {
+      toast.error('Não foi possível deletar o produto')
+    }
+  }
+
+  function renderProduct (product) {
+    return (
+      <ProductCard key={product.id}>
+        <ProductTop>
+          <ProductInfo>
+            <ProductImage
+              imageUrl={product.image ? product.image.url : NoImage}
+            />
+            <ProductDetails>
+              <strong>{product.name}</strong>
+              <p>
+                <span>Categoria: </span>
+                {product.category.name}
+              </p>
+              <p>
+                <span>Preço base: </span>
+                {product.base_price_formatted}
+              </p>
+            </ProductDetails>
+          </ProductInfo>
+          <EditDeleteOptions>
+            <EditButton onClick={() => setEditProduct(product)} />
+            <DeleteButton
+              onClick={() => deleteToastNotification(product.id)}
+            />
+          </EditDeleteOptions>
+        </ProductTop>
+        <ProductBottom>
+          {product.sizes.map(product_size => (
+            <p key={product_size.id}>
+              <span>{product_size.size.name}: </span>
+              {convertToBRL(Number(product_size.price))}
+            </p>
+          ))}
+        </ProductBottom>
+      </ProductCard>
+    )
+  }
+
+  return (
+    <Container>
+      <AddButton onClick={() => setModalOpen(true)} />
+      {modalOpen && (
+        <ProductModal
+          closeModal={() => setModalOpen(false)}
+          product={editProduct}
+        />
+      )}
+      {products.map(product => renderProduct(product))}
+    </Container>
+  )
 }
 
-export default Products;
+export default Products
