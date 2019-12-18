@@ -21,7 +21,9 @@ function SizeModal({ size, closeModal }) {
     loadCategories();
     document.addEventListener("click", clickOutsideEventListener);
 
-    return document.removeEventListener("click", clickOutsideEventListener);
+    return () => {
+      document.removeEventListener("click", clickOutsideEventListener);
+    };
   }, []);
 
   useEffect(() => {

@@ -11,7 +11,6 @@ import {
   ImagesWrapper,
   ImageCard,
   ImageContainer,
-  ImageNameAndDelete,
   DeleteButton
 } from "./styles";
 
@@ -73,7 +72,6 @@ function ImagesContainer() {
       loadImages();
       toast.success("Imagem editada!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível editar a imagem");
     }
   }

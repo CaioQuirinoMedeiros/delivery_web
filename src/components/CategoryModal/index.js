@@ -19,7 +19,9 @@ function CategoryModal({ category, closeModal }) {
     loadImages();
     document.addEventListener("click", clickOutsideEventListener);
 
-    return document.removeEventListener("click", clickOutsideEventListener);
+    return () => {
+      document.removeEventListener("click", clickOutsideEventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -29,6 +31,7 @@ function CategoryModal({ category, closeModal }) {
   }, [category]);
 
   function clickOutsideEventListener(e) {
+    console.log("clicou", e.target);
     if (e.target.id === "outsideCategoryModal") {
       closeModal();
     }
@@ -158,8 +161,8 @@ CategoryModal.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     description: PropTypes.string,
-    cook_time: PropTypes.string,
-    image_id: PropTypes.string
+    cook_time: PropTypes.number,
+    image_id: PropTypes.number
   })
 };
 

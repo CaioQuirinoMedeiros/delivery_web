@@ -23,7 +23,9 @@ function ProductModal({ product, closeModal }) {
     loadCategories();
     document.addEventListener("click", clickOutsideEventListener);
 
-    return document.removeEventListener("click", clickOutsideEventListener);
+    return () => {
+      document.removeEventListener("click", clickOutsideEventListener);
+    };
   }, []);
 
   useEffect(() => {
