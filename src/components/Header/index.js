@@ -1,46 +1,33 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React from 'react'
 
-import logo from "../../assets/images/logo2x.png";
+import logo from '../../assets/images/logo2x.png'
 
-import { logout } from "../../services/auth";
+import { logout } from '../../services/auth'
 
-import { Container, LogoContainer, LogoutContainer } from "./styles";
+import { Container, LogoContainer, LogoutContainer } from './styles'
 
-class Header extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func
-    }).isRequired
-  };
-
-  componentDidMount() {}
-
-  handleLogout = () => {
-    const { history } = this.props;
-
-    logout();
-    history.push("/");
-  };
-
-  render() {
-    return (
-      <Container>
-        <LogoContainer>
-          <img src={logo} alt="logo" />
-          <h1>Pizzaria Don Juan</h1>
-        </LogoContainer>
-        <LogoutContainer>
-          <div>
-            <h3>Caio Quirino</h3>
-            <button type="button" onClick={() => this.handleLogout()}>
-              Sair do app
-            </button>
-          </div>
-        </LogoutContainer>
-      </Container>
-    );
+function Header ({ history }) {
+  function handleLogout () {
+    logout()
+    history.push('/')
   }
+
+  return (
+    <Container>
+      <LogoContainer>
+        <img src={logo} alt='logo' />
+        <h1>Pizzaria Don Juan</h1>
+      </LogoContainer>
+      <LogoutContainer>
+        <div>
+          <h3>Caio Quirino</h3>
+          <button type='button' onClick={handleLogout}>
+            Sair do app
+          </button>
+        </div>
+      </LogoutContainer>
+    </Container>
+  )
 }
 
-export default Header;
+export default Header

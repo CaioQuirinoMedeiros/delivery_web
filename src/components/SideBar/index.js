@@ -1,50 +1,52 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Container from "./styles";
+import Container from './styles'
 
-const SideBar = ({ page, changePage }) => (
-  <Container page={page}>
-    <li
-      className={page === "Orders" ? "active" : ""}
-      onClick={() => changePage("Orders")}
-    >
-      Pedidos
-    </li>
-    <li
-      className={page === "Categories" ? "active" : ""}
-      onClick={() => changePage("Categories")}
-    >
-      Categorias
-    </li>
-    <li
-      className={page === "Sizes" ? "active" : ""}
-      onClick={() => changePage("Sizes")}
-    >
-      Tamanhos
-    </li>
-    <li
-      className={page === "Products" ? "active" : ""}
-      onClick={() => changePage("Products")}
-    >
-      Produtos
-    </li>
-    <li
-      className={page === "Images" ? "active" : ""}
-      onClick={() => changePage("Images")}
-    >
-      Imagens
-    </li>
-  </Container>
-);
+function SideBar ({ page, changePage }) {
+  return (
+    <Container page={page}>
+      <li
+        className={page === 'Orders' ? 'active' : ''}
+        onClick={() => changePage('Orders')}
+      >
+        Pedidos
+      </li>
+      <li
+        className={page === 'Categories' ? 'active' : ''}
+        onClick={() => changePage('Categories')}
+      >
+        Categorias
+      </li>
+      <li
+        className={page === 'Sizes' ? 'active' : ''}
+        onClick={() => changePage('Sizes')}
+      >
+        Tamanhos
+      </li>
+      <li
+        className={page === 'Products' ? 'active' : ''}
+        onClick={() => changePage('Products')}
+      >
+        Produtos
+      </li>
+      <li
+        className={page === 'Images' ? 'active' : ''}
+        onClick={() => changePage('Images')}
+      >
+        Imagens
+      </li>
+    </Container>
+  )
+}
 
 SideBar.propTypes = {
   page: PropTypes.string,
   changePage: PropTypes.func.isRequired
-};
+}
 
 SideBar.defaultProps = {
-  page: "Orders"
-};
+  page: 'Orders'
+}
 
-export default SideBar;
+export default SideBar

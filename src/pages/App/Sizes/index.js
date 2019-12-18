@@ -41,6 +41,7 @@ function Sizes () {
   useEffect(() => {
     if (!modalOpen) {
       setEditSize(null)
+      loadSizes()
     }
   }, [modalOpen])
 

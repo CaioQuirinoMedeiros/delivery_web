@@ -40,6 +40,7 @@ function Categories() {
   useEffect(() => {
     if (!modalOpen) {
       setEditCategory(null)
+      loadCategories()
     }
   }, [modalOpen]);
 

@@ -1,133 +1,104 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import api from "../../services/api";
 import { Container, ProductForm } from "./styles";
 
-class ProductModal extends Component {
-  state = {
+function ProductModal ({ product, closeModal }) {
+  const [newProduct, setNewProduct] = useState({
     name: "",
     base_price: "",
     image_id: "",
     category_id: "",
     product_sizes: [],
-    isLoading: false,
-    images: [],
-    categories: [],
-    sizes: []
-  };
+  })
+  const [images, setImages] = useState([])
+  const [categories, setCategories] = useState([])
+  const [sizes, setSizes] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  componentDidMount() {
-    this.loadImages();
-    this.loadCategories();
+  useEffect(() => {
+    loadImages()
+    loadCategories()
+    document.addEventListener('click', clickOutsideEventListener)
 
-    const { product } = this.props;
+    return document.removeEventListener('click', clickOutsideEventListener)
+  }, [])
 
+  useEffect(() => {
     if (product) {
-      const { name, base_price, image_id, category_id, sizes } = product;
-
-      this.setState({
-        name,
-        base_price,
-        image_id,
-        category_id,
-        product_sizes: sizes.map(product_size => product_size.size_id)
-      });
-
-      this.loadSizes(category_id);
+      setNewProduct({ ...product, product_sizes: sizes.map(product_size => product_size.id) })
+      loadSizes(product.category_id)
     }
+  }, [product])
 
-    document.addEventListener("click", this.clickOutsideEventListener);
-  }
+  useEffect(() => {
+    loadSizes()
+  }, [newProduct.category_id])
 
-  clickOutsideEventListener = e => {
+
+  function clickOutsideEventListener (e) {
     if (e.target.id === "outsideProductModal") {
-      this.props.closeModal();
+     closeModal();
     }
   };
 
-  componentWillUnmount() {
-    document.removeEventListener("click", this.clickOutsideEventListener);
-  }
-
-  loadImages = async () => {
+  async function loadImages () {
     try {
       const { data } = await api.get("admin/images");
 
-      this.setState({ images: data });
+      setImages(data)
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar as imagens");
     }
   };
 
-  loadCategories = async () => {
+  async function loadCategories () {
     try {
       const { data } = await api.get("admin/categories");
 
-      this.setState({ categories: data });
+      setCategories(data)
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar as categorias");
     }
   };
 
-  loadSizes = async category => {
-    if (!category) {
-      this.setState({ sizes: [] });
+  async function loadSizes () {
+    if (!newProduct.category_id) {
+      setSizes([])
       return;
     }
 
     try {
       const { data } = await api.get("admin/sizes", {
-        params: { category }
+        params: { category: newProduct.category_id }
       });
 
-      this.setState({ sizes: data });
+      setSizes(data)
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar os tamanhos");
     }
   };
 
-  handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  function handleInputChange (e) {
+    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
-  handleCategoryChange = e => {
-    this.setState({ category_id: e.target.value });
+  function handleProductSizesChange (e) {
+    const options = Object.values(e.target.options)
+    console.log(options)
+    const selectedOptions = options.filter(option => option.selected)
+    console.log(selectedOptions)
 
-    this.loadSizes(e.target.value);
+    setNewProduct({...newProduct, product_sizes: selectedOptions.map(option => option.value)})
   };
 
-  handleProductSizesChange = e => {
-    const options = e.target.options;
-    const product_sizes = [];
-
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        product_sizes.push(options[i].value);
-      }
-    }
-
-    this.setState({ product_sizes });
-  };
-
-  handleUpdateProduct = async () => {
-    const {
-      name,
-      base_price,
-      image_id,
-      category_id,
-      product_sizes
-    } = this.state;
-
-    const { closeModal, product } = this.props;
-
+  async function handleUpdateProduct () {
+    const {name, base_price, image_id, category_id, product_sizes, id} = newProduct
     try {
-      this.setState({ isLoading: true });
+      setLoading(true)
 
-      await api.put(`admin/products/${product.id}`, {
+      await api.put(`admin/products/${id}`, {
         name,
         base_price,
         image_id,
@@ -140,25 +111,17 @@ class ProductModal extends Component {
       closeModal();
       toast.success("Produto atualizado!");
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao editar o produto, confira os dados preenchidos");
     } finally {
-      this.setState({ isLoading: false });
+      setLoading(false)
     }
   };
 
-  handleCreateProduct = async () => {
-    const {
-      name,
-      base_price,
-      image_id,
-      category_id,
-      product_sizes
-    } = this.state;
-    const { closeModal } = this.props;
+  async function handleCreateProduct () {
+    const {name, base_price, image_id, category_id, product_sizes} = newProduct
 
     try {
-      this.setState({ isLoading: true });
+      setLoading(true)
 
       await api.post("admin/products", {
         name,
@@ -173,43 +136,30 @@ class ProductModal extends Component {
       closeModal();
       toast.success("Produto criado!");
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao criar o produto, confira os dados preenchidos");
     } finally {
-      this.setState({ isLoading: false });
+      setLoading(false)
     }
   };
 
-  handleSubmit = e => {
+  function handleSubmit (e) {
     e.preventDefault();
 
-    const { product } = this.props;
-
-    product ? this.handleUpdateProduct() : this.handleCreateProduct();
+    if (product) {
+      handleUpdateProduct()
+    } else {
+      handleCreateProduct()
+    }
   };
-
-  render() {
-    const {
-      name,
-      base_price,
-      image_id,
-      category_id,
-      product_sizes,
-      isLoading,
-      images,
-      categories,
-      sizes
-    } = this.state;
-    const { closeModal, product } = this.props;
 
     return (
       <Container id="outsideProductModal">
-        <ProductForm onSubmit={this.handleSubmit}>
+        <ProductForm onSubmit={handleSubmit}>
           <h2>{product ? "Editar" : "Criar"} produto</h2>
           <input
             name="name"
-            value={name}
-            onChange={this.handleInputChange}
+            value={newProduct.name}
+            onChange={handleInputChange}
             placeholder="Nome"
           />
           <input
@@ -218,16 +168,16 @@ class ProductModal extends Component {
             min="0"
             max="1000"
             step="0.01"
-            value={base_price}
-            onChange={this.handleInputChange}
+            value={newProduct.base_price}
+            onChange={handleInputChange}
             placeholder="Preço base"
           />
           <div>
             <label>Imagem</label>
             <select
-              value={image_id}
+              value={newProduct.image_id}
               name="image_id"
-              onChange={this.handleInputChange}
+              onChange={handleInputChange}
             >
               {images.length &&
                 images.map(image => (
@@ -241,9 +191,9 @@ class ProductModal extends Component {
           <div>
             <label>Categoria</label>
             <select
-              value={category_id}
+              value={newProduct.category_id}
               name="category_id"
-              onChange={this.handleCategoryChange}
+              onChange={handleInputChange}
             >
               {categories.length &&
                 categories.map(category => (
@@ -260,7 +210,7 @@ class ProductModal extends Component {
               multiple
               name="product_sizes"
               onChange={e => {
-                this.handleProductSizesChange(e);
+                handleProductSizesChange(e);
               }}
             >
               {sizes.length &&
@@ -268,7 +218,7 @@ class ProductModal extends Component {
                   <option
                     key={size.id}
                     value={size.id}
-                    selected={product_sizes.includes(size.id)}
+                    selected={newProduct.product_sizes.includes(size.id)}
                   >
                     {size.name}
                   </option>
@@ -276,7 +226,7 @@ class ProductModal extends Component {
             </select>
           </div>
           <button type="submit">
-            {isLoading ? "Carregando..." : "Salvar"}
+            {loading ? "Carregando..." : "Salvar"}
           </button>
           <button type="button" className="close" onClick={() => closeModal()}>
             Fechar
@@ -284,7 +234,6 @@ class ProductModal extends Component {
         </ProductForm>
       </Container>
     );
-  }
 }
 
 export default ProductModal;

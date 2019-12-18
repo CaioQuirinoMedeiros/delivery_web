@@ -43,6 +43,7 @@ function Products () {
   useEffect(() => {
     if (!modalOpen) {
       setEditProduct(null)
+      loadProducts()
     }
   }, [modalOpen])
 
