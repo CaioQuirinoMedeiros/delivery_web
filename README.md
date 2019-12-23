@@ -12,7 +12,7 @@ This web app integrates with an [API](https://github.com/CaioQuirinoMedeiros/del
 
 ## Try it now
 
-I deployed this project on Netlify, try it out: [pizza-delivery.com](https://objective-raman-c63c72.netlify.com/app)
+I deployed this project on Netlify, try it out: [pizza-delivery.com](https://pizza-delivery.netlify.com)
 
 - email: `caio1@gmail.com`
 - password: `123123`
