@@ -9,6 +9,7 @@ export const Container = styled.div`
   justify-content: center;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)), ${`url(${fundo})`};
   background-position: center;
+  background-size: cover;
 `;
 
 export const SignInForm = styled.form`

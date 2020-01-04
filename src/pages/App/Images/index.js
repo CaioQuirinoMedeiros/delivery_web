@@ -11,7 +11,6 @@ import {
   ImagesWrapper,
   ImageCard,
   ImageContainer,
-  ImageNameAndDelete,
   DeleteButton
 } from "./styles";
 
@@ -30,7 +29,6 @@ function ImagesContainer() {
 
       setImages(data);
     } catch (err) {
-      console.log(err);
       toast.error("Erro ao buscar imagens");
     }
   }
@@ -61,7 +59,6 @@ function ImagesContainer() {
       await loadImages();
       toast.success("Imagem adicionada!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível adicionar a imagem");
     }
   }
@@ -73,7 +70,6 @@ function ImagesContainer() {
       loadImages();
       toast.success("Imagem editada!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível editar a imagem");
     }
   }
@@ -98,7 +94,6 @@ function ImagesContainer() {
       loadImages();
       toast.success("Imagem deletada!");
     } catch (err) {
-      console.log(err);
       toast.error("Não foi possível deletar a imagem");
     }
   }
