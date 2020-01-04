@@ -86,6 +86,7 @@ export const ImageCard = styled.div`
   box-shadow: 0px 0px 12px -5px rgba(0, 0, 0, 0.75);
   margin: 10px;
   transition: all 0.3s;
+  position: relative;
 
   input {
     align-self: stretch;
