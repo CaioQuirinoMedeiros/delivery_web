@@ -50,24 +50,3 @@ export const AddButton = styled(FaPlusCircle).attrs({
     color: #e62638;
   }
 `;
-
-export const GitHubIcon = styled.a`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 80px;
-  width: 80px;
-  border-top-right-radius: 40px;
-  border-top-left-radius: 40px;
-  border-bottom-right-radius: 40px;
-  background-image: ${`url(${githubIcon})`};
-  background-position: center;
-  background-size: cover;
-  transition: all 0.3s;
-
-  &:hover {
-    transform: scale(1.1);
-    left: 5px;
-    bottom: 5px;
-  }
-`;

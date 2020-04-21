@@ -52,3 +52,32 @@ export const SignInForm = styled.form`
     }
   }
 `;
+
+export const TesteToast = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  span {
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #f15454;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 2rem;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #e62638;
+    }
+  }
+`
