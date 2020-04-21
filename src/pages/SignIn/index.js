@@ -20,7 +20,7 @@ function SignIn({ history }) {
           <TesteToast>
             <p>AMBIENTE DE TESTE</p>
             <span>
-              <strong>E-mail:</strong> admin@gympoint.com
+              <strong>E-mail:</strong> admin@delivery.com
             </span>
             <span>
               <strong>Senha:</strong> 123456

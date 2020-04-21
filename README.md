@@ -14,8 +14,8 @@ This web app integrates with an [API](https://github.com/CaioQuirinoMedeiros/del
 
 I deployed this project on Netlify, try it out: [pizza-delivery.com](https://pizza-delivery.netlify.com)
 
-- email: `caio1@gmail.com`
-- password: `123123`
+- email: `admin@delivery.com`
+- password: `123456`
 
 **Note**
 Remember that this web app is for managing the application, try the [app for customers](https://github.com/CaioQuirinoMedeiros/delivery_app) too
